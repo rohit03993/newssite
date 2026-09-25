@@ -2,9 +2,14 @@
 if (!function_exists('nm_h')) {
 	require_once __DIR__ . '/admin_helpers.php';
 }
+$nmBrand = function_exists('nm_brand_mark') ? nm_brand_mark(isset($con) ? $con : null) : array('logo' => '', 'favicon' => '', 'title' => '');
+$nmMenuTitle = $nmBrand['title'] !== '' ? $nmBrand['title'] : 'News';
 if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
-  echo '<link rel="stylesheet" href="css/admin-modern.css?v=22">' . "\n";
+	echo '<link rel="stylesheet" href="css/admin-modern.css?v=22">' . "\n";
+	if ($nmBrand['favicon'] !== '') {
+		echo '<link rel="icon" href="' . htmlspecialchars($nmBrand['favicon']) . '">' . "\n";
+	}
 	echo '<script src="js/nm-dialog.js?v=1"></script>' . "\n";
 }
 $nmPage = basename(isset($_SERVER["PHP_SELF"]) ? $_SERVER["PHP_SELF"] : "");
@@ -13,6 +18,7 @@ if (!isset($nmMe) || !is_array($nmMe)) {
 		'name' => 'Admin', 'role' => 'Admin', 'is_admin' => true, 'team_id' => 0, 'avatar' => '', 'initial' => 'N',
 	);
 }
+$nmMenuLogo = $nmBrand['logo'] !== '' ? $nmBrand['logo'] : (isset($nmMe['avatar']) ? $nmMe['avatar'] : '');
 $nmIsAdmin = !empty($nmMe['is_admin']);
 $nmAdminOnly = array(
 	'categories.php', 'edit_category.php', 'cleanup_news.php', 'rashifal.php', 'edit_rashifal.php',
@@ -33,8 +39,8 @@ if (!function_exists("nm_nav_active")) {
 ?>
 <nav id="sidebar">
   <div class="sidebar-header">
-    <?php if (!empty($nmMe['avatar'])) { ?>
-      <img class="sidebar-avatar" src="<?php echo htmlspecialchars($nmMe['avatar']); ?>" alt="" width="64" height="64">
+    <?php if ($nmMenuLogo !== '') { ?>
+      <img class="sidebar-avatar" src="<?php echo htmlspecialchars($nmMenuLogo); ?>" alt="" width="64" height="64">
     <?php } else { ?>
       <div class="sidebar-avatar sidebar-avatar--letter"><?php echo htmlspecialchars($nmMe['initial']); ?></div>
     <?php } ?>
@@ -42,7 +48,7 @@ if (!function_exists("nm_nav_active")) {
       <strong><?php echo htmlspecialchars($nmMe['name']); ?></strong>
       <span><?php echo htmlspecialchars($nmMe['role']); ?></span>
     </div>
-    <a class="sidebar-brand" href="dashboard.php">Naradmuni</a>
+    <a class="sidebar-brand" href="dashboard.php"><?php echo htmlspecialchars($nmMenuTitle); ?></a>
   </div>
 
   <ul class="list-unstyled components">

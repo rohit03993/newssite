@@ -300,6 +300,32 @@ if (!function_exists('nm_admin_team_id')) {
 	}
 }
 
+/** Logo and name saved on the Branding screen. */
+if (!function_exists('nm_brand_mark')) {
+	function nm_brand_mark($con)
+	{
+		if (!function_exists('nm_setting_get')) {
+			require_once __DIR__ . '/site_settings_lib.php';
+		}
+		$logo = '';
+		$favicon = '';
+		$title = '';
+		if ($con instanceof mysqli) {
+			nm_ensure_site_settings($con);
+			$logoFile = trim(nm_setting_get($con, 'brand_logo', ''));
+			$favFile = trim(nm_setting_get($con, 'brand_favicon', ''));
+			$title = trim(nm_setting_get($con, 'site_title', ''));
+			if ($logoFile !== '') {
+				$logo = '../images/logo/' . rawurlencode($logoFile);
+			}
+			if ($favFile !== '') {
+				$favicon = '../images/logo/' . rawurlencode($favFile);
+			}
+		}
+		return array('logo' => $logo, 'favicon' => $favicon, 'title' => $title);
+	}
+}
+
 /** Display name, role, team id, and photo (team byline photo first, then admin profile/). */
 if (!function_exists('nm_cms_identity')) {
 	function nm_cms_identity($con, $userRow = null)

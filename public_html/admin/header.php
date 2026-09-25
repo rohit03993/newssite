@@ -9,6 +9,10 @@ if (!isset($nmMe) || !is_array($nmMe)) {
 	);
 }
 $nmAdminName = $nmMe['name'];
+if (!isset($nmBrand) || !is_array($nmBrand)) {
+	$nmBrand = function_exists('nm_brand_mark') ? nm_brand_mark(isset($con) ? $con : null) : array('logo' => '', 'favicon' => '', 'title' => '');
+}
+$nmMenuLogo = $nmBrand['logo'] !== '' ? $nmBrand['logo'] : (isset($nmMe['avatar']) ? $nmMe['avatar'] : '');
 if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
 	echo '<link rel="stylesheet" href="css/admin-modern.css?v=22">' . "\n";
@@ -26,8 +30,8 @@ if (!defined("NM_ADMIN_ASSETS")) {
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle nm-topbar-user" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <?php if (!empty($nmMe['avatar'])) { ?>
-            <img class="nm-topbar-avatar" src="<?php echo htmlspecialchars($nmMe['avatar']); ?>" alt="">
+          <?php if ($nmMenuLogo !== '') { ?>
+            <img class="nm-topbar-avatar" src="<?php echo htmlspecialchars($nmMenuLogo); ?>" alt="">
           <?php } else { ?>
             <span class="nm-topbar-avatar nm-topbar-avatar--letter"><?php echo htmlspecialchars($nmMe['initial']); ?></span>
           <?php } ?>
