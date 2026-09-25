@@ -114,7 +114,7 @@ if (isset($_POST["save_branding"])) {
 		if (!$logoFile && !$favFile) {
 			$err = "Choose a logo and/or favicon file to upload.";
 		} elseif ($ok) {
-			$msg = "Branding saved. Public site picks this up within about 1 minute (or after Next restart).";
+			$msg = "Branding saved. Refresh the public site to see the new logo and favicon.";
 		} else {
 			$err = "Could not save settings. Check DB permissions.";
 		}
@@ -162,6 +162,7 @@ if (isset($_POST["save_social"])) {
 	}
 }
 
+$nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("favicon" => "");
 $siteTitle = nm_setting_get($con, "site_title", "The Naradmuni");
 $siteDescription = nm_setting_get($con, "site_description", "हिंदी न्यूज़ मध्य प्रदेश");
 $brandAccent = nm_setting_get($con, "brand_accent", "red");
@@ -201,6 +202,9 @@ if ($socialWhatsapp === "") {
   <link rel="stylesheet" href="../include/css/style.css">
   <link rel="stylesheet" href="css/admin-modern.css?v=16">
   <script src="../include/js/jquery.min.js"></script>
+  <?php if (!empty($nmHeadBrand['favicon'])) { ?>
+  <link rel="icon" href="<?php echo htmlspecialchars($nmHeadBrand['favicon']); ?>">
+  <?php } ?>
 </head>
 <body>
 <div class="wrapper">

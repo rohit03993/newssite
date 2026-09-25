@@ -8,7 +8,7 @@ if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
 	echo '<link rel="stylesheet" href="css/admin-modern.css?v=22">' . "\n";
 	if ($nmBrand['favicon'] !== '') {
-		echo '<link rel="icon" href="' . htmlspecialchars($nmBrand['favicon']) . '">' . "\n";
+		echo '<script>var nmIcon=document.createElement("link");nmIcon.rel="icon";nmIcon.href=' . json_encode($nmBrand['favicon']) . ';document.head.appendChild(nmIcon);</script>' . "\n";
 	}
 	echo '<script src="js/nm-dialog.js?v=1"></script>' . "\n";
 }
