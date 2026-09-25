@@ -1,0 +1,101 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import NewsDate from "@/components/NewsDate";
+import NewsTitle from "@/components/NewsTitle";
+import { newsImage } from "@/lib/images";
+import { getCategoryByUrl, getChildCategories, countNewsByCategory, getNewsByCategory } from "@/lib/queries";
+import { listingMeta } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/siteUrl";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const page = Math.max(1, Number((await searchParams).page || 1));
+  const cat = await getCategoryByUrl(slug);
+  if (!cat) return { title: "The Naradmuni" };
+
+  const path = `/category/${cat.cat_url}`;
+  const site = getSiteUrl();
+  const url = page > 1 ? `${site}${path}?page=${page}` : `${site}${path}`;
+  const title = (cat.metat || cat.hindi_name || "").trim() || "The Naradmuni";
+  const description =
+    (cat.metad || "").trim() || `${cat.hindi_name} की ताज़ा खबरें | The Naradmuni`;
+
+  return listingMeta(title, description, url);
+}
+
+export default async function CategoryPage({ params, searchParams }: Props) {
+  const { slug } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, Number(sp.page || 1));
+  const cat = await getCategoryByUrl(slug);
+  if (!cat) notFound();
+
+  const [items, total, children] = await Promise.all([
+    getNewsByCategory(cat.id, page, 21),
+    countNewsByCategory(cat.id),
+    getChildCategories(cat.id),
+  ]);
+  const perPage = 21;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  const canonical = cat.cat_url || slug;
+
+  return (
+    <section className="cat-page">
+      <h1 className="cat-h1">{cat.hindi_name}</h1>
+      {cat.metad ? <p className="cat-intro">{cat.metad}</p> : null}
+      {children.length ? (
+        <div className="district">
+          <details>
+            <summary style={{ cursor: "pointer", fontWeight: 600, marginBottom: 8 }}>जिला चुनें</summary>
+            <div className="pills">
+              {children.map((c) =>
+                c.cat_url ? (
+                  <a key={c.id} href={`/category/${c.cat_url}`}>
+                    {c.hindi_name}
+                  </a>
+                ) : null
+              )}
+            </div>
+          </details>
+        </div>
+      ) : null}
+      {items.length ? (
+        <div className="cat-tiles">
+          {items.map((n, i) => {
+            const src = newsImage(n.image);
+            return (
+              <a className="cat-tile" key={n.newsid} href={`/news/${n.newsurl}`}>
+                {src ? (
+                  <img
+                    src={src}
+                    alt=""
+                    loading={i < 3 ? "eager" : "lazy"}
+                    decoding="async"
+                    {...(i < 3 ? { fetchPriority: "high" as const } : {})}
+                  />
+                ) : (
+                  <div className="ph cat-tile-ph" />
+                )}
+                <div className="cat-tile-text">
+                  <h3><NewsTitle html={n.title} /></h3>
+                  <NewsDate date={n.date} />
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p style={{ color: "var(--muted)" }}>इस श्रेणी में अभी कोई प्रकाशित समाचार नहीं है।</p>
+      )}
+      <div className="pager">
+        {page > 1 ? <a href={`/category/${canonical}?page=${page - 1}`}>पिछला</a> : null}
+        {page < pages ? <a href={`/category/${canonical}?page=${page + 1}`}>अगला</a> : null}
+      </div>
+    </section>
+  );
+}
