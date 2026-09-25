@@ -1,7 +1,6 @@
-<ifModule mod_rewrite.c>
-RewriteEngine on
-# Public news → Next.js (path /news/{slug} unchanged)
-RewriteCond %{REQUEST_FILENAME} !-d
+<IfModule mod_rewrite.c>
+RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ http://localhost:3000/news/$1 [R=302,L,NE]
-</ifModule>
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+</IfModule>
