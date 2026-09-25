@@ -4,7 +4,7 @@ require dirname(__DIR__) . '/nm/view.php';
 
 $slug = isset($_GET['url']) ? trim((string) $_GET['url']) : '';
 $article = $slug !== '' ? nm_article($slug) : null;
-$brand = nm_settings(array('brand_logo'));
+$brand = nm_settings(array('brand_logo', 'brand_favicon'));
 $logo = nm_logo_src($brand);
 $nav = nm_main_categories();
 $cities = nm_districts_with_news();
@@ -32,6 +32,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?php echo $article ? nm_h($headline) : nm_h($siteTitle); ?> | <?php echo nm_h($siteTitle); ?></title>
+  <link rel="icon" href="<?php echo nm_h(nm_favicon_src($brand)); ?>">
   <meta name="description" content="<?php echo nm_h($article && !empty($article['short_description']) ? $article['short_description'] : ($siteDescription !== '' ? $siteDescription : $siteTitle)); ?>">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=4">

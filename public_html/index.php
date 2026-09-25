@@ -31,6 +31,7 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?php echo nm_h($siteTitle); ?><?php echo $siteDescription !== '' ? ' | ' . nm_h($siteDescription) : ''; ?></title>
+  <link rel="icon" href="<?php echo nm_h(nm_favicon_src($brand)); ?>">
   <meta name="description" content="<?php echo nm_h($siteDescription !== '' ? $siteDescription : $siteTitle); ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -46,6 +46,15 @@ function nm_logo_src($brand)
     return nm_url('/images/logo/' . rawurlencode($file));
 }
 
+function nm_favicon_src($brand)
+{
+    $file = isset($brand['brand_favicon']) ? trim($brand['brand_favicon']) : '';
+    if ($file === '') {
+        return nm_url('/favicon.ico');
+    }
+    return nm_url('/images/logo/' . rawurlencode($file));
+}
+
 function nm_card($item, $priority = false)
 {
     $href = nm_url('/news/' . $item['newsurl']);
