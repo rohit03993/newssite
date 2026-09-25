@@ -19,8 +19,11 @@ $socials = array(
 );
 $accentRow = nm_settings(array('brand_accent'));
 $accentHex = nm_accent_hex(isset($accentRow['brand_accent']) ? $accentRow['brand_accent'] : 'red');
+$nameRow = nm_settings(array('site_title', 'site_description'));
+$siteTitle = !empty($nameRow['site_title']) ? $nameRow['site_title'] : 'The Naradmuni';
+$siteDescription = isset($nameRow['site_description']) ? $nameRow['site_description'] : 'हिंदी न्यूज़ मध्य प्रदेश';
 $headline = $article ? nm_plain_title($article['title']) : '';
-$author = ($article && $article['author_name'] !== '') ? $article['author_name'] : 'The Naradmuni';
+$author = ($article && $article['author_name'] !== '') ? $article['author_name'] : $siteTitle;
 $authorPhoto = ($article && $article['author_image'] !== '') ? nm_url('/team/' . rawurlencode($article['author_image'])) : '';
 $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] : '';
 ?><!DOCTYPE html>
@@ -28,7 +31,8 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?php echo $article ? nm_h($headline) : 'News'; ?> | The Naradmuni</title>
+  <title><?php echo $article ? nm_h($headline) : nm_h($siteTitle); ?> | <?php echo nm_h($siteTitle); ?></title>
+  <meta name="description" content="<?php echo nm_h($article && !empty($article['short_description']) ? $article['short_description'] : ($siteDescription !== '' ? $siteDescription : $siteTitle)); ?>">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=4">
   <style>
@@ -44,7 +48,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
       <div class="header-inner">
         <div class="header-left">
           <a href="<?php echo nm_h(nm_url('/')); ?>" class="logo">
-            <img src="<?php echo nm_h($logo); ?>" alt="The Naradmuni">
+            <img src="<?php echo nm_h($logo); ?>" alt="<?php echo nm_h($siteTitle); ?>">
           </a>
         </div>
         <div class="header-actions">
@@ -93,7 +97,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
                 </div>
                 <div class="byline-text">
                   <p class="byline-author"><span class="byline-by">By </span><strong><?php echo nm_h($author); ?></strong></p>
-                  <p class="byline-desk">The Naradmuni<?php echo $place !== '' ? ', ' . nm_h($place) : ''; ?></p>
+                  <p class="byline-desk"><?php echo nm_h($siteTitle); ?><?php echo $place !== '' ? ', ' . nm_h($place) : ''; ?></p>
                 </div>
               </div>
               <?php if (!empty($article['date'])): ?>
@@ -166,7 +170,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   </div>
   <footer class="footer">
     <div class="shell">
-      <img src="<?php echo nm_h($logo); ?>" alt="The Naradmuni" style="height:48px;margin:0 auto 16px">
+      <img src="<?php echo nm_h($logo); ?>" alt="<?php echo nm_h($siteTitle); ?>" style="height:48px;margin:0 auto 16px">
       <div class="footer-links">
         <?php foreach ($pages as $p): ?>
           <a href="<?php echo nm_h(nm_url('/page/' . $p['page_url'])); ?>"><?php echo nm_h($p['page']); ?></a>
@@ -178,7 +182,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
         <a class="footer-social" href="<?php echo nm_h($socials['youtube']); ?>" target="_blank" rel="noreferrer" aria-label="YouTube"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.6V8.4L15.8 12l-6 3.6z"/></svg></a>
         <a class="footer-social" href="<?php echo nm_h($socials['whatsapp']); ?>" target="_blank" rel="noreferrer" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.45-9.96 9.94 0 1.75.46 3.46 1.34 4.97L2 22l5.25-1.37c1.45.79 3.08 1.21 4.79 1.21h.01c5.5 0 9.96-4.46 9.96-9.95C22 6.45 17.54 2 12.04 2zm5.8 14.24c-.24.68-1.4 1.25-1.93 1.33-.5.08-1.13.11-1.82-.11-.42-.14-.96-.31-1.66-.61-2.92-1.26-4.82-4.2-4.97-4.4-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.28.57-.35.76-.35h.55c.17 0 .41-.07.64.49.24.58.82 2 .89 2.14.07.14.12.31.02.5-.1.19-.14.31-.28.48-.14.17-.3.38-.42.51-.14.14-.28.29-.12.56.16.28.71 1.17 1.52 1.89 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.6-.07.17-.19.7-.81.89-1.09.19-.28.38-.23.64-.14.26.1 1.66.78 1.95.92.28.14.47.21.54.33.07.12.07.7-.17 1.38z"/></svg></a>
       </div>
-      <p class="copy">Copyright © <?php echo date('Y'); ?> The Naradmuni. All Rights Reserved.</p>
+      <p class="copy">Copyright © <?php echo date('Y'); ?> <?php echo nm_h($siteTitle); ?>. All Rights Reserved.</p>
     </div>
   </footer>
   <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>"></script>

@@ -135,6 +135,21 @@ if (isset($_POST["save_brand_color"])) {
 	}
 }
 
+if (isset($_POST["save_site_text"])) {
+	$siteTitleIn = trim(isset($_POST["site_title"]) ? (string) $_POST["site_title"] : "");
+	$siteDescIn = trim(isset($_POST["site_description"]) ? (string) $_POST["site_description"] : "");
+	if ($siteTitleIn === "") {
+		$err = "Site name cannot be empty.";
+	} else {
+		$ok = nm_setting_set($con, "site_title", $siteTitleIn) && nm_setting_set($con, "site_description", $siteDescIn);
+		if ($ok) {
+			$msg = "Site name and description saved. Refresh the public site to see them.";
+		} else {
+			$err = "Could not save the site name.";
+		}
+	}
+}
+
 if (isset($_POST["save_social"])) {
 	$ok = true;
 	foreach (array("social_facebook", "social_x", "social_youtube", "social_whatsapp") as $k) {
@@ -147,6 +162,8 @@ if (isset($_POST["save_social"])) {
 	}
 }
 
+$siteTitle = nm_setting_get($con, "site_title", "The Naradmuni");
+$siteDescription = nm_setting_get($con, "site_description", "हिंदी न्यूज़ मध्य प्रदेश");
 $brandAccent = nm_setting_get($con, "brand_accent", "red");
 if (!isset(nm_color_choices()[$brandAccent])) {
 	$brandAccent = "red";
@@ -194,6 +211,21 @@ if ($socialWhatsapp === "") {
       <li class="breadcrumb-item"><a href="dashboard.php">Home</a> <i class="fa fa-angle-right"></i> Branding</li>
     </ol>
     <div class="container-fluid page-content" style="max-width:720px;">
+      <h2 style="margin-top:0;">Site name</h2>
+      <p class="text-muted">This name and short line are used on the whole public site: the browser tab, the footer, and the end of each story title.</p>
+      <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;margin-bottom:16px;">
+        <div class="form-group">
+          <label for="site_title">Site name</label>
+          <input class="form-control" id="site_title" name="site_title" type="text" maxlength="80" value="<?php echo htmlspecialchars($siteTitle); ?>">
+        </div>
+        <div class="form-group">
+          <label for="site_description">Short description</label>
+          <input class="form-control" id="site_description" name="site_description" type="text" maxlength="160" value="<?php echo htmlspecialchars($siteDescription); ?>">
+          <small class="form-text text-muted">Shows after the name in the browser tab, and as the site description for Google.</small>
+        </div>
+        <button type="submit" name="save_site_text" value="1" class="btn btn-danger">Save name</button>
+      </form>
+
       <h2 style="margin-top:0;">Logo &amp; favicon</h2>
       <p class="text-muted">
         Upload a new header logo and browser favicon. Files stay under
@@ -287,7 +319,7 @@ if ($socialWhatsapp === "") {
       </form>
 
       <div class="alert alert-info" style="margin-top:16px;">
-        After saving, wait up to <strong>1 minute</strong> or restart Next once, then hard-refresh the public site.
+        After saving, refresh the public site. The name, description, logo, and colour apply on the home page and on story pages.
       </div>
     </div>
     <?php include "footer.php"; ?>
