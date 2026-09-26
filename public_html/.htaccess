@@ -2,7 +2,8 @@ RewriteEngine On
 
 # Home and story pages. Do not send visitors to Node.
 RewriteRule ^news/([^/]+)/?$ news/index.php?url=$1 [L,QSA]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^category/(.*)$ category.php?slug=$1 [L,QSA]
+RewriteRule ^category/([^/]+)/?$ category/index.php?url=$1 [L,QSA]
+RewriteRule ^latest/?$ latest.php [L,QSA]
+RewriteRule ^author/([0-9]+)/?$ author.php?id=$1 [L,QSA]
+RewriteRule ^page/([^/]+)/?$ page/index.php?url=$1 [L,QSA]
+RewriteRule ^install/?$ install.php [L,QSA]
