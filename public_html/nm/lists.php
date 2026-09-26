@@ -18,21 +18,7 @@ function nm_category_by_url($slug)
     return $rows ? $rows[0] : null;
 }
 
-function nm_child_categories($parentId)
-{
-    return nm_rows(
-        "SELECT id, hindi_name, cat_url
-         FROM categories
-         WHERE parent = ?
-           AND cat_url IS NOT NULL AND cat_url != ''
-           AND hindi_name IS NOT NULL AND hindi_name != ''
-         ORDER BY latter ASC, hindi_name ASC",
-        's',
-        array((string) $parentId)
-    );
-}
-
-function nm_news_by_category($catId, $page, $perPage)
+function nm_news_page_by_category($catId, $page, $perPage)
 {
     $page = max(1, (int) $page);
     $perPage = min(40, max(1, (int) $perPage));

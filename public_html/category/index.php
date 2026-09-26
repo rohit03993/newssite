@@ -17,7 +17,7 @@ if (!$cat) {
     exit;
 }
 
-$items = nm_news_by_category($cat['id'], $page, $perPage);
+$items = nm_news_page_by_category($cat['id'], $page, $perPage);
 $total = nm_count_news_by_category($cat['id']);
 $children = nm_child_categories($cat['id']);
 $pages = max(1, (int) ceil($total / $perPage));
