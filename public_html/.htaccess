@@ -1,5 +1,8 @@
 RewriteEngine On
 
+# Browser tab icon follows the favicon saved in Branding.
+RewriteRule ^favicon\.ico$ favicon.php [L]
+
 # Home and story pages. Do not send visitors to Node.
 RewriteRule ^news/([^/]+)/?$ news/index.php?url=$1 [L,QSA]
 RewriteRule ^category/([^/]+)/?$ category/index.php?url=$1 [L,QSA]

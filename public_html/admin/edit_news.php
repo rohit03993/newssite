@@ -314,7 +314,7 @@ if (isset($_POST['update'])) {
           <h2 class="nm-form-section__title">Author (byline)</h2>
           <div class="nm-form-grid">
             <div class="nm-form-field nm-form-field--full">
-              <label class="control-label" for="team_id">Shows as By Name / The Naradmuni</label>
+              <label class="control-label" for="team_id">Shows as By Name / site name</label>
               <?php if (!nm_is_admin($con)) { ?>
               <input type="hidden" name="team_id" value="<?php echo (int) $selTeam; ?>">
               <p class="form-control-plaintext" style="margin:0;font-weight:600;"><?php echo nm_h(isset($au['name']) ? $au['name'] : ''); ?></p>

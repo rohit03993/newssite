@@ -85,5 +85,5 @@ if (!move_uploaded_file($file['tmp_name'], $dest)) {
 	nm_cke_upload_done($funcNum, '', 'Could not save the image.');
 }
 
-$url = '/naradmuni/images/news/' . $name;
+$url = '/images/news/' . $name;
 nm_cke_upload_done($funcNum, $url, '');

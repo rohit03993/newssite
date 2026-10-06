@@ -1,5 +1,18 @@
 <?php
 include "admin/config.php";
+require_once __DIR__ . "/admin/admin_helpers.php";
+require_once __DIR__ . "/admin/site_settings_lib.php";
+$nmLoginName = function_exists("nm_setting_get") ? nm_setting_get($con, "site_title", "News") : "News";
+if ($nmLoginName === "") {
+	$nmLoginName = "News";
+}
+$nmLoginLogoFile = function_exists("nm_setting_get") ? trim(nm_setting_get($con, "brand_logo", "")) : "";
+$nmLoginFavFile = function_exists("nm_setting_get") ? trim(nm_setting_get($con, "brand_favicon", "")) : "";
+$nmLogin = array(
+	"logo" => $nmLoginLogoFile !== "" ? "/images/logo/" . rawurlencode($nmLoginLogoFile) : "",
+	"favicon" => $nmLoginFavFile !== "" ? "/images/logo/" . rawurlencode($nmLoginFavFile) : "",
+	"title" => $nmLoginName,
+);
 
 // Already logged in → dashboard (single admin app)
 if (isset($_SESSION["aemail"]) && !isset($_POST["login_admin"])) {
@@ -47,7 +60,10 @@ if (isset($_POST["login_admin"])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Naradmuni Admin Login</title>
+  <title><?php echo htmlspecialchars($nmLoginName); ?> Admin Login</title>
+  <?php if (!empty($nmLogin["favicon"])) { ?>
+  <link rel="icon" href="<?php echo htmlspecialchars($nmLogin["favicon"]); ?>">
+  <?php } ?>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="include/css/bootstrap.min.css">
@@ -60,7 +76,10 @@ if (isset($_POST["login_admin"])) {
 <body class="nm-login">
   <div class="nm-login-card card">
     <div class="card-header">
-      <h2>Naradmuni</h2>
+      <?php if (!empty($nmLogin["logo"])) { ?>
+      <img src="<?php echo htmlspecialchars($nmLogin["logo"]); ?>" alt="" style="max-height:56px;margin-bottom:8px">
+      <?php } ?>
+      <h2><?php echo htmlspecialchars($nmLoginName); ?></h2>
       <p>Admin CMS · one login</p>
     </div>
     <div class="card-body">

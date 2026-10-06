@@ -28,12 +28,14 @@ function naradmuni_send_news_push($con, $title, $body, $imageFile, $newsurl) {
         return false;
     }
 
-    $site = rtrim($publicroot ?: 'https://www.thenaradmuni.com/', '/') . '/';
+    $site = rtrim($publicroot ?: '/', '/') . '/';
     $assets = rtrim($urlroot ?: $site, '/') . '/';
-    $icon = 'https://www.thenaradmuni.com/images/icon/AppIcon4x.png';
-    // Prefer same-origin PWA icon when on localhost Next
-    if (strpos($site, 'localhost') !== false || strpos($site, '127.0.0.1') !== false) {
-        $icon = rtrim($site, '/') . '/icons/app-icon.png';
+    $icon = rtrim($site, '/') . '/favicon.ico';
+    if (function_exists('nm_setting_get')) {
+        $favFile = trim(nm_setting_get($con, 'brand_favicon', ''));
+        if ($favFile !== '') {
+            $icon = rtrim($site, '/') . '/images/logo/' . rawurlencode($favFile);
+        }
     }
 
     $imageUrl = '';
@@ -44,7 +46,7 @@ function naradmuni_send_news_push($con, $title, $body, $imageFile, $newsurl) {
     $msg = [
         'title' => $title,
         'body' => $body ? $body : $title,
-        'sound' => 'https://www.thenaradmuni.com/sound/sound.mp3',
+        'sound' => 'default',
         'icon' => $icon,
         'image' => $imageUrl,
         'click_action' => $site . 'news/' . $newsurl,

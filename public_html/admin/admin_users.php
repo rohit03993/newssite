@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin login accounts: create email/password, role Admin|Author, link Team profile
- * so article byline shows "By {Name} / The Naradmuni".
+ * so the article byline shows the author name and the site name from Branding.
  */
 include "config.php";
 
@@ -230,7 +230,7 @@ $panel = "padding:18px 20px;border:1px solid #e5e7eb;border-radius:8px;backgroun
     </ol>
     <div class="container-fluid page-content nm-au-wrap">
       <h2>Admin users</h2>
-      <p class="nm-au-sub">Create login email + password. Link a Team profile so articles show photo and &quot;By Name / The Naradmuni&quot;.</p>
+      <p class="nm-au-sub">Create login email + password. Link a Team profile so articles show the photo and the author name.</p>
 
       <?php if (!$schemaReady) { ?>
         <div class="alert alert-warning">

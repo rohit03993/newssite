@@ -149,7 +149,7 @@ $fullPreview = $sampleTitle . "\n" . $sampleUrl . "\n\n" . $previewFooter;
             <div class="form-group">
               <label for="wa_share_invite_text">Invite / community text</label>
               <textarea class="form-control" id="wa_share_invite_text" name="wa_share_invite_text" rows="3"><?php echo htmlspecialchars($invite); ?></textarea>
-              <p class="wa-field-hint">Hindi/English lines inviting readers to join Naradmuni.</p>
+              <p class="wa-field-hint">Hindi or English lines inviting readers to follow this site.</p>
             </div>
 
             <div class="form-group">

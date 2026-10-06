@@ -113,7 +113,7 @@ $publicBase = isset($publicroot) ? rtrim($publicroot, "/") : "";
         <div class="nm-profile-card">
           <div class="nm-profile-intro">
             <h2>Public author profile</h2>
-            <p>This is what readers see under the headline: photo + “By your name” + The Naradmuni.</p>
+            <p>This is what readers see under the headline: photo, “By your name”, and the site name from Branding.</p>
           </div>
           <form method="post" enctype="multipart/form-data">
             <div class="nm-profile-grid">

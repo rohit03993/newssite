@@ -57,7 +57,7 @@ if($_POST["actions"] =="Add")
 	    
 		'title' => $title,
 		'body' => $description,
-		'icon' => 'https://www.thenaradmuni.com/images/icon/AppIcon4x.png',
+		'icon' => rtrim($publicroot, '/') . '/favicon.ico',
 		'image' => $image,
 		'click_action'=> $link,
 	];

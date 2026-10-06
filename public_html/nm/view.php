@@ -41,7 +41,7 @@ function nm_logo_src($brand)
 {
     $file = isset($brand['brand_logo']) ? trim($brand['brand_logo']) : '';
     if ($file === '') {
-        $file = 'Logo @2x.png';
+        return '';
     }
     return nm_url('/images/logo/' . rawurlencode($file));
 }
@@ -50,7 +50,7 @@ function nm_favicon_src($brand)
 {
     $file = isset($brand['brand_favicon']) ? trim($brand['brand_favicon']) : '';
     if ($file === '') {
-        return nm_url('/favicon.ico');
+        return '';
     }
     return nm_url('/images/logo/' . rawurlencode($file));
 }

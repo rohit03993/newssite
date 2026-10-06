@@ -22,7 +22,7 @@ $userRow = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
 
 nm_ensure_site_settings($con);
 
-$DEFAULT_LOGO = "Logo @2x.png";
+$DEFAULT_LOGO = "";
 $logoDir = realpath(__DIR__ . "/../images/logo");
 if ($logoDir === false) {
 	@mkdir(__DIR__ . "/../images/logo", 0755, true);
@@ -88,10 +88,10 @@ function nm_clean_social_url($raw) {
 }
 
 $SOCIAL_DEFAULTS = array(
-	"social_facebook" => "https://www.facebook.com/The-Naradmuni-100115665387257",
-	"social_x" => "https://twitter.com/the_naradmuni",
-	"social_youtube" => "https://www.youtube.com/channel/UCFk1xW3Qt_THywQF-rtO9LQ",
-	"social_whatsapp" => "https://api.whatsapp.com/send?phone=+917415716541&text=" . rawurlencode("व्हाट्सप्प पर खबरें भेजें"),
+	"social_facebook" => "",
+	"social_x" => "",
+	"social_youtube" => "",
+	"social_whatsapp" => "",
 );
 
 if (isset($_POST["reset_branding"])) {
@@ -156,15 +156,15 @@ if (isset($_POST["save_social"])) {
 		$ok = $ok && nm_setting_set($con, $k, nm_clean_social_url(isset($_POST[$k]) ? $_POST[$k] : ""));
 	}
 	if ($ok) {
-		$msg = "Social links saved. Footer icons update within about 1 minute (or after Next restart).";
+		$msg = "Social links saved. Refresh the public site to see the footer icons.";
 	} else {
 		$err = "Could not save social links. Check DB permissions.";
 	}
 }
 
 $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("favicon" => "");
-$siteTitle = nm_setting_get($con, "site_title", "The Naradmuni");
-$siteDescription = nm_setting_get($con, "site_description", "हिंदी न्यूज़ मध्य प्रदेश");
+$siteTitle = nm_setting_get($con, "site_title", "News");
+$siteDescription = nm_setting_get($con, "site_description", "");
 $brandAccent = nm_setting_get($con, "brand_accent", "red");
 if (!isset(nm_color_choices()[$brandAccent])) {
 	$brandAccent = "red";
@@ -249,9 +249,13 @@ if ($socialWhatsapp === "") {
           <div>
             <div class="text-muted" style="font-size:12px;margin-bottom:6px;">Logo</div>
             <div style="background:#f8f9fa;border:1px solid #e5e7eb;border-radius:8px;padding:12px;min-width:180px;">
+              <?php if ($activeLogo !== "") { ?>
               <img src="<?php echo htmlspecialchars($logoPreview); ?>?t=<?php echo time(); ?>" alt="Logo" style="max-height:64px;max-width:220px;display:block;">
+              <?php } else { ?>
+              <span class="text-muted" style="font-size:12px;">Upload a logo</span>
+              <?php } ?>
             </div>
-            <code style="font-size:11px;"><?php echo htmlspecialchars($activeLogo); ?></code>
+            <code style="font-size:11px;"><?php echo $activeLogo !== "" ? htmlspecialchars($activeLogo) : "No logo yet"; ?></code>
           </div>
           <div>
             <div class="text-muted" style="font-size:12px;margin-bottom:6px;">Favicon</div>

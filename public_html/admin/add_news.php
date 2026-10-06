@@ -258,7 +258,7 @@ if(isset($_POST['add']))
                 <h2 class="nm-form-section__title">Author (byline)</h2>
                 <div class="nm-form-grid">
                   <div class="nm-form-field nm-form-field--full">
-                    <label class="control-label" for="team_id">Shows as By Name / The Naradmuni</label>
+                    <label class="control-label" for="team_id">Shows as By Name / site name</label>
                     <?php
                     $nmAddIsAdmin = function_exists('nm_is_admin') ? nm_is_admin($con) : true;
                     $selDefault = $nmLinkedTeamId > 0 ? $nmLinkedTeamId : 0;
