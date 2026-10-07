@@ -66,7 +66,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=6">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=7">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
@@ -124,7 +124,6 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
               <?php if (!empty($article['date'])): ?>
                 <time class="news-date news-date--article"><?php echo nm_h($article['date']); ?></time>
               <?php endif; ?>
-              <span class="story-views"><?php echo number_format(nm_news_view_total($article['newsid']) + 1); ?> views</span>
             </div>
           <?php endif; ?>
           <h1 class="h1 news-title"><?php echo nm_title_html($article['title']); ?></h1>
@@ -144,7 +143,13 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
                 </div>
               </div>
             </div>
-            <?php echo nm_share_actions($headline, $shareUrl); ?>
+            <div class="meta-tools">
+              <span class="story-views" title="Views">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                <strong><?php echo number_format(nm_news_view_total($article['newsid']) + 1); ?></strong>
+              </span>
+              <?php echo nm_share_actions($headline, $shareUrl); ?>
+            </div>
           </div>
           <?php
             $summary = trim(strip_tags((string) $article['short_description']));
