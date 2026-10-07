@@ -1482,13 +1482,14 @@ code {
   }
   .nm-news-table tr.nm-news-card {
     display: grid !important;
-    grid-template-columns: 52px minmax(0, 1fr) 124px auto;
+    grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
-      "photo title title title"
-      "photo cat cat date"
-      "status status views actions";
+      "photo title title"
+      "cat date date"
+      "status status views"
+      "actions actions actions";
     column-gap: 8px;
-    row-gap: 4px;
+    row-gap: 6px;
     align-items: center;
     width: 100% !important;
     margin: 0 0 8px;
@@ -1522,8 +1523,8 @@ code {
   .nm-news-table .nm-views-cell { grid-area: views; }
   .nm-news-table .nm-actions-cell { grid-area: actions; }
   .nm-news-table .nm-card-photo img {
-    width: 52px;
-    height: 52px !important;
+    width: 48px;
+    height: 48px !important;
     object-fit: cover;
     border-radius: 8px;
     display: block;
@@ -1572,32 +1573,36 @@ code {
     padding: 0 22px 0 8px !important;
     border-radius: 8px !important;
   }
-  .nm-news-table .nm-views-cell {
-    min-width: 124px !important;
+  .nm-news-table .nm-views-cell,
+  .nm-news-table .nm-card-status,
+  .nm-news-table .nm-actions-cell {
+    min-width: 0 !important;
   }
   .nm-news-table .nm-view-form,
   .nm-news-table .nm-view-box {
-    width: 124px !important;
-    max-width: 124px !important;
-    min-width: 124px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     justify-content: stretch;
   }
   .nm-news-table .nm-view-input {
     flex: 1 1 auto !important;
-    width: 68px !important;
-    min-width: 56px !important;
+    width: auto !important;
+    min-width: 0 !important;
     color: #0f172a !important;
     text-align: center !important;
     opacity: 1 !important;
   }
   .nm-news-table .nm-view-save {
-    flex: 0 0 auto;
-    padding: 0 8px !important;
+    flex: 0 0 52px;
+    width: 52px !important;
+    padding: 0 !important;
     color: #0f172a;
   }
   .nm-news-table .nm-actions-cell {
     display: flex;
-    gap: 4px;
+    flex-wrap: nowrap;
+    gap: 6px;
     align-items: center;
     min-width: 0 !important;
   }
