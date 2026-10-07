@@ -15,7 +15,7 @@ if (!isset($nmBrand) || !is_array($nmBrand)) {
 $nmMenuLogo = $nmBrand['logo'] !== '' ? $nmBrand['logo'] : (isset($nmMe['avatar']) ? $nmMe['avatar'] : '');
 if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
-	echo '<link rel="stylesheet" href="css/admin-modern.css?v=32">' . "\n";
+	echo '<link rel="stylesheet" href="css/admin-modern.css?v=33">' . "\n";
 	echo '<script src="js/nm-dialog.js?v=1"></script>' . "\n";
 }
 ?>
