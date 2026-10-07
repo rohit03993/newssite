@@ -1482,7 +1482,7 @@ code {
   }
   .nm-news-table tr.nm-news-card {
     display: grid !important;
-    grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1.1fr) auto;
+    grid-template-columns: 52px minmax(0, 1fr) 124px auto;
     grid-template-areas:
       "photo title title title"
       "photo cat cat date"
@@ -1572,11 +1572,28 @@ code {
     padding: 0 22px 0 8px !important;
     border-radius: 8px !important;
   }
+  .nm-news-table .nm-views-cell {
+    min-width: 124px !important;
+  }
   .nm-news-table .nm-view-form,
   .nm-news-table .nm-view-box {
-    width: 100%;
-    max-width: 100%;
+    width: 124px !important;
+    max-width: 124px !important;
+    min-width: 124px !important;
     justify-content: stretch;
+  }
+  .nm-news-table .nm-view-input {
+    flex: 1 1 auto !important;
+    width: 68px !important;
+    min-width: 56px !important;
+    color: #0f172a !important;
+    text-align: center !important;
+    opacity: 1 !important;
+  }
+  .nm-news-table .nm-view-save {
+    flex: 0 0 auto;
+    padding: 0 8px !important;
+    color: #0f172a;
   }
   .nm-news-table .nm-actions-cell {
     display: flex;
