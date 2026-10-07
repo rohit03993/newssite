@@ -43,6 +43,46 @@ function nm_menu_rows($con)
 	return $rows;
 }
 
+function nm_menu_news_counts($con)
+{
+	$counts = array();
+	$sql = "SELECT cat_id, COUNT(*) AS total FROM (
+		SELECT CAST(n.category AS UNSIGNED) AS cat_id, n.newsid
+		FROM news n
+		WHERE n.status = 'Published'
+		  AND (n.newstype IS NULL OR n.newstype != 'Video')
+		  AND n.category REGEXP '^[0-9]+$'
+		UNION
+		SELECT CAST(nc.category AS UNSIGNED) AS cat_id, n.newsid
+		FROM news_cat nc
+		INNER JOIN news n ON n.newsid = nc.news_id
+		WHERE n.status = 'Published'
+		  AND (n.newstype IS NULL OR n.newstype != 'Video')
+		  AND nc.category REGEXP '^[0-9]+$'
+	) tagged
+	GROUP BY cat_id";
+	$q = mysqli_query($con, $sql);
+	if (!$q) {
+		$q = mysqli_query(
+			$con,
+			"SELECT category AS cat_id, COUNT(*) AS total
+			 FROM news
+			 WHERE status = 'Published'
+			   AND (newstype IS NULL OR newstype != 'Video')
+			 GROUP BY category"
+		);
+	}
+	if ($q) {
+		while ($row = mysqli_fetch_assoc($q)) {
+			$id = (int) $row["cat_id"];
+			if ($id > 0) {
+				$counts[$id] = (int) $row["total"];
+			}
+		}
+	}
+	return $counts;
+}
+
 if (isset($_POST["save_menu"])) {
 	$rows = nm_menu_rows($con);
 	$show = isset($_POST["show"]) && is_array($_POST["show"]) ? $_POST["show"] : array();
@@ -82,6 +122,7 @@ if (isset($_POST["save_menu"])) {
 
 $ready = nm_setting_get($con, "top_menu_ready", "") === "1";
 $rows = nm_menu_rows($con);
+$newsCounts = nm_menu_news_counts($con);
 $names = array();
 foreach ($rows as $row) {
 	$label = trim((string) $row["hindi_name"]);
@@ -119,6 +160,7 @@ foreach ($rows as $i => $row) {
 	$rows[$i]["_on"] = isset($checked[$id]);
 	$parentId = isset($row["parent"]) ? trim((string) $row["parent"]) : "";
 	$rows[$i]["_child"] = ($parentId !== "" && $parentId !== "0");
+	$rows[$i]["_news"] = isset($newsCounts[$id]) ? $newsCounts[$id] : 0;
 }
 
 usort($rows, function ($a, $b) {
@@ -161,7 +203,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
     </ol>
     <div class="container-fluid page-content" style="max-width:860px;">
       <h2 style="margin-top:0;">Top menu</h2>
-      <p class="text-muted">Tick the categories you want in the blue bar under the logo. A smaller number shows first. Main categories, such as Madhya Pradesh, are listed before the districts. The home icon stays first.</p>
+      <p class="text-muted">Tick the categories you want in the blue bar under the logo. A smaller number shows first. Main categories, such as Madhya Pradesh, are listed before the districts. News is the number of published stories in that category. The home icon stays first.</p>
       <?php if ($msg) { ?><div class="alert alert-success"><?php echo nm_h($msg); ?></div><?php } ?>
       <?php if ($err) { ?><div class="alert alert-danger"><?php echo nm_h($err); ?></div><?php } ?>
       <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
@@ -176,6 +218,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
                 <th style="width:70px;">Show</th>
                 <th style="width:90px;">Order</th>
                 <th>Category</th>
+                <th style="width:90px;">News</th>
                 <th>Under</th>
               </tr>
             </thead>
@@ -197,7 +240,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
                   }
               ?>
               <tr class="menu-section">
-                <td colspan="4" style="background:#f3f4f6;font-weight:700;"><?php echo nm_h($groupLabel); ?></td>
+                <td colspan="5" style="background:#f3f4f6;font-weight:700;"><?php echo nm_h($groupLabel); ?></td>
               </tr>
               <?php } ?>
               <tr data-name="<?php echo nm_h($row["hindi_name"] . " " . $row["maincat"] . " " . $row["cat_url"]); ?>">
@@ -211,6 +254,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
                   <?php echo nm_h($row["hindi_name"]); ?>
                   <div class="text-muted" style="font-size:12px;">/category/<?php echo nm_h($row["cat_url"]); ?></div>
                 </td>
+                <td><?php echo (int) $row["_news"]; ?></td>
                 <td><?php echo nm_h($under); ?></td>
               </tr>
               <?php endforeach; ?>
