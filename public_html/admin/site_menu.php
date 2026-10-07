@@ -117,11 +117,16 @@ foreach ($rows as $i => $row) {
 		$rows[$i]["_ord"] = (int) $row["short"];
 	}
 	$rows[$i]["_on"] = isset($checked[$id]);
+	$parentId = isset($row["parent"]) ? trim((string) $row["parent"]) : "";
+	$rows[$i]["_child"] = ($parentId !== "" && $parentId !== "0");
 }
 
 usort($rows, function ($a, $b) {
 	if ($a["_on"] !== $b["_on"]) {
 		return $a["_on"] ? -1 : 1;
+	}
+	if ($a["_child"] !== $b["_child"]) {
+		return $a["_child"] ? 1 : -1;
 	}
 	if ($a["_on"] && (int) $a["_ord"] !== (int) $b["_ord"]) {
 		return (int) $a["_ord"] - (int) $b["_ord"];
@@ -156,7 +161,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
     </ol>
     <div class="container-fluid page-content" style="max-width:860px;">
       <h2 style="margin-top:0;">Top menu</h2>
-      <p class="text-muted">Tick the categories you want in the blue bar under the logo. A smaller number shows first. The home icon stays first. Unticked names stay off that bar.</p>
+      <p class="text-muted">Tick the categories you want in the blue bar under the logo. A smaller number shows first. Main categories, such as Madhya Pradesh, are listed before the districts. The home icon stays first.</p>
       <?php if ($msg) { ?><div class="alert alert-success"><?php echo nm_h($msg); ?></div><?php } ?>
       <?php if ($err) { ?><div class="alert alert-danger"><?php echo nm_h($err); ?></div><?php } ?>
       <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
@@ -175,12 +180,27 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($rows as $row):
+              <?php
+              $lastGroup = "";
+              foreach ($rows as $row):
                 $id = (int) $row["id"];
                 $parentId = isset($row["parent"]) ? (string) $row["parent"] : "0";
                 $under = ($parentId !== "" && $parentId !== "0" && isset($names[$parentId])) ? $names[$parentId] : "—";
+                $group = $row["_on"] ? "on" : ($row["_child"] ? "child" : "main");
+                if ($group !== $lastGroup) {
+                  $lastGroup = $group;
+                  $groupLabel = "On the blue bar now";
+                  if ($group === "main") {
+                    $groupLabel = "Main categories";
+                  } elseif ($group === "child") {
+                    $groupLabel = "Districts and other";
+                  }
               ?>
-              <tr data-name="<?php echo nm_h($row["hindi_name"] . " " . $row["cat_url"]); ?>">
+              <tr class="menu-section">
+                <td colspan="4" style="background:#f3f4f6;font-weight:700;"><?php echo nm_h($groupLabel); ?></td>
+              </tr>
+              <?php } ?>
+              <tr data-name="<?php echo nm_h($row["hindi_name"] . " " . $row["maincat"] . " " . $row["cat_url"]); ?>">
                 <td style="text-align:center;">
                   <input type="checkbox" name="show[<?php echo $id; ?>]" value="1"<?php echo $row["_on"] ? " checked" : ""; ?>>
                 </td>
