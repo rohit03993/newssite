@@ -1482,17 +1482,17 @@ code {
   }
   .nm-news-table tr.nm-news-card {
     display: grid !important;
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1.1fr) auto;
     grid-template-areas:
-      "photo title"
-      "cat date"
-      "status views"
-      "actions actions";
-    column-gap: 10px;
-    row-gap: 6px;
+      "photo title title title"
+      "photo cat cat date"
+      "status status views actions";
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: center;
     width: 100% !important;
-    margin: 0 0 10px;
-    padding: 10px;
+    margin: 0 0 8px;
+    padding: 8px;
     background: #fff;
     border: 1px solid #e6eaef !important;
     border-radius: 12px;
@@ -1522,14 +1522,15 @@ code {
   .nm-news-table .nm-views-cell { grid-area: views; }
   .nm-news-table .nm-actions-cell { grid-area: actions; }
   .nm-news-table .nm-card-photo img {
-    width: 64px;
-    height: 48px !important;
+    width: 52px;
+    height: 52px !important;
     object-fit: cover;
     border-radius: 8px;
+    display: block;
   }
   .nm-news-table .nm-card-title {
-    font-size: 14px;
-    line-height: 1.35;
+    font-size: 13px;
+    line-height: 1.3;
     font-weight: 700;
   }
   .nm-news-table .nm-title-cell {
@@ -1542,34 +1543,53 @@ code {
     display: none;
   }
   .nm-news-table .nm-byline {
-    margin: 2px 0 0;
-    font-size: 12px;
+    margin: 1px 0 0;
+    font-size: 11px;
   }
   .nm-news-table .nm-card-cat,
   .nm-news-table .nm-date-cell {
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.2;
     color: #64748b;
-    align-self: center;
+  }
+  .nm-news-table .nm-date-cell br {
+    display: none;
+  }
+  .nm-news-table .nm-date-cell .nm-muted {
+    margin-left: 4px;
   }
   .nm-news-table .nm-card-status select,
-  .nm-news-table .nm-view-box {
+  .nm-news-table .nm-view-box,
+  .nm-news-table .nm-view-input,
+  .nm-news-table .nm-view-save {
+    height: 32px !important;
+    min-height: 0 !important;
+    font-size: 12px !important;
+  }
+  .nm-news-table .nm-card-status select {
     width: 100% !important;
     max-width: 100% !important;
-    height: 34px !important;
+    padding: 0 22px 0 8px !important;
+    border-radius: 8px !important;
   }
-  .nm-news-table .nm-view-form {
+  .nm-news-table .nm-view-form,
+  .nm-news-table .nm-view-box {
     width: 100%;
+    max-width: 100%;
     justify-content: stretch;
   }
   .nm-news-table .nm-actions-cell {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
+    min-width: 0 !important;
   }
   .nm-news-table .nm-actions-cell .btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     margin: 0;
+    padding: 0;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
