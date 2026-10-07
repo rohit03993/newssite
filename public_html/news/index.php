@@ -66,7 +66,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=5">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=6">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
@@ -124,6 +124,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
               <?php if (!empty($article['date'])): ?>
                 <time class="news-date news-date--article"><?php echo nm_h($article['date']); ?></time>
               <?php endif; ?>
+              <span class="story-views"><?php echo number_format(nm_news_view_total($article['newsid']) + 1); ?> views</span>
             </div>
           <?php endif; ?>
           <h1 class="h1 news-title"><?php echo nm_title_html($article['title']); ?></h1>

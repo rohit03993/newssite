@@ -65,6 +65,23 @@ function nm_body_html($raw)
     return $html;
 }
 
+function nm_news_view_total($newsid)
+{
+    $id = (int) $newsid;
+    if ($id < 1 || !nm_con()) {
+        return 0;
+    }
+    $rows = nm_rows(
+        "SELECT COUNT(*) AS c FROM news_views WHERE newsid = ?",
+        'i',
+        array($id)
+    );
+    if (!$rows || !isset($rows[0]['c'])) {
+        return 0;
+    }
+    return (int) $rows[0]['c'];
+}
+
 function nm_record_news_view($newsid)
 {
     $id = (int) $newsid;
