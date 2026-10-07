@@ -141,5 +141,46 @@ function nm_page_by_slug($slug)
     if (nm_is_ads_txt_page($rows[0]['page_url'], $rows[0]['page'])) {
         return array('ads_txt' => true);
     }
-    return $rows[0];
+    return nm_scrub_policy_page($rows[0]);
+}
+
+function nm_scrub_policy_page($page)
+{
+    $slug = isset($page['page_url']) ? (string) $page['page_url'] : '';
+    $policy = array('editorial-policy', 'fact-check-policy', 'correction-policy');
+    if (!in_array($slug, $policy, true)) {
+        return $page;
+    }
+    $nameRow = nm_settings(array('site_title'));
+    $siteTitle = isset($nameRow['site_title']) ? $nameRow['site_title'] : '';
+    $changed = false;
+    foreach (array('page', 'description', 'metat', 'metad') as $field) {
+        if (!isset($page[$field])) {
+            continue;
+        }
+        $next = nm_old_brand_to_site($page[$field], $siteTitle);
+        if ($next !== (string) $page[$field]) {
+            $page[$field] = $next;
+            $changed = true;
+        }
+    }
+    if ($changed) {
+        $con = nm_con();
+        if ($con) {
+            $stmt = mysqli_prepare(
+                $con,
+                "UPDATE pages SET page = ?, description = ?, metat = ?, metad = ? WHERE page_url = ? LIMIT 1"
+            );
+            if ($stmt) {
+                $heading = isset($page['page']) ? (string) $page['page'] : '';
+                $body = (string) $page['description'];
+                $metat = isset($page['metat']) ? (string) $page['metat'] : '';
+                $metad = isset($page['metad']) ? (string) $page['metad'] : '';
+                mysqli_stmt_bind_param($stmt, 'sssss', $heading, $body, $metat, $metad, $slug);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+            }
+        }
+    }
+    return $page;
 }

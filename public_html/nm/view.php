@@ -137,6 +137,27 @@ function nm_topic_block($section, $singleOnly, $showEmpty)
     return $html;
 }
 
+function nm_drop_old_share($text, $siteTitle)
+{
+    $text = trim(nm_old_brand_to_site($text, $siteTitle));
+    if ($text === '') {
+        return '';
+    }
+    $old = array(
+        'chat.whatsapp.com/BkZoIpOAGBS6YFMSn2xSoM',
+        'onelink.to/kqnpym',
+        'thenaradmuni.com',
+        'com.thenaradmuni.news',
+    );
+    $lower = strtolower($text);
+    foreach ($old as $bit) {
+        if (strpos($lower, $bit) !== false) {
+            return '';
+        }
+    }
+    return $text;
+}
+
 function nm_whatsapp_footer()
 {
     if (!function_exists('nm_settings')) {
@@ -148,10 +169,12 @@ function nm_whatsapp_footer()
         'wa_share_app_text',
         'wa_share_app_link',
     ));
-    $invite = isset($saved['wa_share_invite_text']) ? trim($saved['wa_share_invite_text']) : '';
-    $group = isset($saved['wa_share_group_link']) ? trim($saved['wa_share_group_link']) : '';
-    $appText = isset($saved['wa_share_app_text']) ? trim($saved['wa_share_app_text']) : '';
-    $appLink = isset($saved['wa_share_app_link']) ? trim($saved['wa_share_app_link']) : '';
+    $nameRow = nm_settings(array('site_title'));
+    $siteTitle = isset($nameRow['site_title']) ? $nameRow['site_title'] : '';
+    $invite = nm_drop_old_share(isset($saved['wa_share_invite_text']) ? $saved['wa_share_invite_text'] : '', $siteTitle);
+    $group = nm_drop_old_share(isset($saved['wa_share_group_link']) ? $saved['wa_share_group_link'] : '', $siteTitle);
+    $appText = nm_drop_old_share(isset($saved['wa_share_app_text']) ? $saved['wa_share_app_text'] : '', $siteTitle);
+    $appLink = nm_drop_old_share(isset($saved['wa_share_app_link']) ? $saved['wa_share_app_link'] : '', $siteTitle);
     $parts = array();
     if ($invite !== '') {
         $parts[] = $invite;

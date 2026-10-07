@@ -24,7 +24,10 @@ $siteTitle = !empty($nameRow['site_title']) ? $nameRow['site_title'] : 'News';
 $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_description'] : 'हिंदी न्यूज़ मध्य प्रदेश';
 $headline = $article ? nm_plain_title($article['title']) : '';
 $author = ($article && $article['author_name'] !== '') ? $article['author_name'] : $siteTitle;
-$authorPhoto = ($article && $article['author_image'] !== '') ? nm_url('/team/' . rawurlencode($article['author_image'])) : '';
+$authorFile = ($article && $article['author_image'] !== '') ? (string) $article['author_image'] : '';
+$authorPhoto = ($authorFile !== '' && !preg_match('/logo|favicon|appicon|narad/i', $authorFile))
+    ? nm_url('/team/' . rawurlencode($authorFile))
+    : '';
 $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] : '';
 ?><!DOCTYPE html>
 <html lang="hi">
@@ -219,6 +222,6 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
       <p class="copy">Copyright © <?php echo date('Y'); ?> <?php echo nm_h($siteTitle); ?>. All Rights Reserved.</p>
     </div>
   </footer>
-  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>"></script>
+  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
 </body>
 </html>

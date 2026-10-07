@@ -60,4 +60,22 @@
       closeCity();
     }
   });
+
+  var notify = document.getElementById("notify-btn");
+  if (notify) {
+    notify.addEventListener("click", function () {
+      var title = notify.getAttribute("data-site") || "News";
+      if (!("Notification" in window)) {
+        window.alert("This browser cannot show alerts.");
+        return;
+      }
+      Notification.requestPermission().then(function (result) {
+        if (result === "granted") {
+          try {
+            new Notification(title, { body: "Alerts are on for this browser." });
+          } catch (e) {}
+        }
+      });
+    });
+  }
 })();

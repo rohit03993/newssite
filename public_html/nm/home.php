@@ -1,6 +1,23 @@
 <?php
 require_once __DIR__ . '/db.php';
 
+function nm_old_brand_to_site($text, $siteTitle)
+{
+    $name = trim((string) $siteTitle);
+    if ($name === '') {
+        $name = 'News';
+    }
+    $out = preg_replace('/the\s*naradmuni/i', $name, (string) $text);
+    if ($out === null) {
+        $out = (string) $text;
+    }
+    return str_replace(
+        array('TheNaradMuni', 'द नारदमुनि', 'नारदमुनि'),
+        array($name, $name, $name),
+        $out
+    );
+}
+
 function nm_settings($keys)
 {
     if (!$keys) {

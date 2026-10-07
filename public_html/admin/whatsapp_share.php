@@ -22,10 +22,10 @@ $userRow = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
 nm_ensure_site_settings($con);
 
 $DEFAULTS = array(
-	"wa_share_invite_text" => "मध्य प्रदेश एवं छत्तीसगढ़ समेत देश-विदेश की तमाम खबर पाने के लिए द नारदमुनि से अभी जुड़ें",
-	"wa_share_group_link" => "https://chat.whatsapp.com/BkZoIpOAGBS6YFMSn2xSoM",
-	"wa_share_app_text" => "देश दुनिया की खबर पाने के लिए अभी डाउनलोड करें द नारदमुनि एप\n\nDownload The TheNaradMuni App",
-	"wa_share_app_link" => "http://onelink.to/kqnpym",
+	"wa_share_invite_text" => "",
+	"wa_share_group_link" => "",
+	"wa_share_app_text" => "",
+	"wa_share_app_link" => "",
 );
 
 $msg = "";
@@ -67,10 +67,59 @@ function nm_wa_val($con, $key, $defaults) {
 	return $v !== "" ? $v : $defaults[$key];
 }
 
+function nm_wa_drop_old($text, $siteTitle) {
+	$text = trim((string) $text);
+	$out = preg_replace('/the\s*naradmuni/i', $siteTitle, $text);
+	if ($out === null) {
+		$out = $text;
+	}
+	$out = str_replace(
+		array("TheNaradMuni", "द नारदमुनि", "नारदमुनि"),
+		array($siteTitle, $siteTitle, $siteTitle),
+		$out
+	);
+	$lower = strtolower($out);
+	$old = array(
+		"chat.whatsapp.com/bkzoipoagbs6yfmsn2xsom",
+		"onelink.to/kqnpym",
+		"thenaradmuni.com",
+		"com.thenaradmuni.news",
+	);
+	foreach ($old as $bit) {
+		if (strpos($lower, $bit) !== false) {
+			return "";
+		}
+	}
+	return trim($out);
+}
+
 $invite = nm_wa_val($con, "wa_share_invite_text", $DEFAULTS);
 $group = nm_wa_val($con, "wa_share_group_link", $DEFAULTS);
 $appText = nm_wa_val($con, "wa_share_app_text", $DEFAULTS);
 $appLink = nm_wa_val($con, "wa_share_app_link", $DEFAULTS);
+
+$waSite = trim((string) nm_setting_get($con, "site_title", "News"));
+if ($waSite === "") {
+	$waSite = "News";
+}
+$waClean = array(
+	"wa_share_invite_text" => nm_wa_drop_old($invite, $waSite),
+	"wa_share_group_link" => nm_wa_drop_old($group, $waSite),
+	"wa_share_app_text" => nm_wa_drop_old($appText, $waSite),
+	"wa_share_app_link" => nm_wa_drop_old($appLink, $waSite),
+);
+if ($waClean["wa_share_invite_text"] !== $invite
+	|| $waClean["wa_share_group_link"] !== $group
+	|| $waClean["wa_share_app_text"] !== $appText
+	|| $waClean["wa_share_app_link"] !== $appLink) {
+	foreach ($waClean as $waKey => $waVal) {
+		nm_setting_set($con, $waKey, $waVal);
+	}
+}
+$invite = $waClean["wa_share_invite_text"];
+$group = $waClean["wa_share_group_link"];
+$appText = $waClean["wa_share_app_text"];
+$appLink = $waClean["wa_share_app_link"];
 
 $previewParts = array();
 if (trim($invite) !== "") {

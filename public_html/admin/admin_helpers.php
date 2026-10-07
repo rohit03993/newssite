@@ -1102,7 +1102,8 @@ JS;
 }
 
 /**
- * Insert standard policy pages if missing. Never changes an existing page_url or body.
+ * Insert standard policy pages if missing. Existing rows keep their page_url.
+ * Old brand words in those three pages are replaced with the site title.
  */
 if (!function_exists('nm_ensure_cms_pages')) {
 	function nm_ensure_cms_pages($con)
@@ -1114,10 +1115,10 @@ if (!function_exists('nm_ensure_cms_pages')) {
 			array(
 				'page' => 'Editorial Policy',
 				'page_url' => 'editorial-policy',
-				'metat' => 'Editorial Policy | The Naradmuni',
-				'metad' => 'The Naradmuni की संपादकीय नीति — स्वतंत्र रिपोर्टिंग, स्रोत और जवाबदेही।',
+				'metat' => 'Editorial Policy | This newsroom',
+				'metad' => 'This newsroom की संपादकीय नीति — स्वतंत्र रिपोर्टिंग, स्रोत और जवाबदेही।',
 				'description' => <<<HTML
-<p>The Naradmuni मध्य प्रदेश और छत्तीसगढ़ की खबरें जनता के हित में प्रकाशित करता है। यह पेज बताता है कि हम खबर कैसे चुनते और लिखते हैं। टीम इसे कभी भी अपडेट कर सकती है।</p>
+<p>This newsroom मध्य प्रदेश और छत्तीसगढ़ की खबरें जनता के हित में प्रकाशित करता है। यह पेज बताता है कि हम खबर कैसे चुनते और लिखते हैं। टीम इसे कभी भी अपडेट कर सकती है।</p>
 <h2>स्वतंत्र संपादन</h2>
 <p>संपादकीय फैसला खबर की सार्वजनिक अहमियत, तथ्यों और लोकहित पर आधारित होता है। सत्ता, विपक्ष, विज्ञापनदाता या निजी दबाव से खबर नहीं बदलवाई जाती।</p>
 <h2>बायलाइन और स्रोत</h2>
@@ -1137,10 +1138,10 @@ HTML
 			array(
 				'page' => 'Fact Check Policy',
 				'page_url' => 'fact-check-policy',
-				'metat' => 'Fact Check Policy | The Naradmuni',
-				'metad' => 'The Naradmuni कैसे दावों की जाँच करता है — स्रोत, सबूत और निष्कर्ष।',
+				'metat' => 'Fact Check Policy | This newsroom',
+				'metad' => 'This newsroom कैसे दावों की जाँच करता है — स्रोत, सबूत और निष्कर्ष।',
 				'description' => <<<HTML
-<p>सोशल मीडिया और वायरल मैसेज में गलत सूचना तेज़ी से फैलती है। The Naradmuni फैक्ट चेक में दावे को सबूत से मिलाकर बताता है — राय नहीं, जाँच।</p>
+<p>सोशल मीडिया और वायरल मैसेज में गलत सूचना तेज़ी से फैलती है। This newsroom फैक्ट चेक में दावे को सबूत से मिलाकर बताता है — राय नहीं, जाँच।</p>
 <h2>क्या जाँच करते हैं</h2>
 <ul>
 <li>वायरल फोटो, वीडियो, आँकड़े और राजनीतिक दावे, जब वे लोकहित में हों।</li>
@@ -1164,8 +1165,8 @@ HTML
 			array(
 				'page' => 'Correction Policy',
 				'page_url' => 'correction-policy',
-				'metat' => 'Correction Policy | The Naradmuni',
-				'metad' => 'गलती दिखे तो कैसे सुधार करवाएँ — The Naradmuni की सुधार नीति।',
+				'metat' => 'Correction Policy | This newsroom',
+				'metad' => 'गलती दिखे तो कैसे सुधार करवाएँ — This newsroom की सुधार नीति।',
 				'description' => <<<HTML
 <p>गलती हो सकती है। हम उसे छिपाते नहीं। यह पेज बताता है कि सुधार कैसे माँगें और हम क्या करते हैं।</p>
 <h2>सुधार कैसे भेजें</h2>
@@ -1188,8 +1189,36 @@ HTML
 
 		foreach ($pages as $p) {
 			$slug = mysqli_real_escape_string($con, $p['page_url']);
-			$exists = mysqli_query($con, "SELECT `p_id` FROM `pages` WHERE `page_url`='$slug' LIMIT 1");
+			$exists = mysqli_query($con, "SELECT `p_id`, `page`, `description`, `metat`, `metad` FROM `pages` WHERE `page_url`='$slug' LIMIT 1");
 			if ($exists instanceof mysqli_result && mysqli_num_rows($exists) > 0) {
+				$row = mysqli_fetch_assoc($exists);
+				$siteTitle = 'News';
+				if (!function_exists('nm_setting_get')) {
+					require_once __DIR__ . '/site_settings_lib.php';
+				}
+				if (function_exists('nm_setting_get')) {
+					$siteTitle = trim((string) nm_setting_get($con, 'site_title', 'News'));
+					if ($siteTitle === '') {
+						$siteTitle = 'News';
+					}
+				}
+				$heading = preg_replace('/the\s*naradmuni/i', $siteTitle, (string) $row['page']);
+				$body = preg_replace('/the\s*naradmuni/i', $siteTitle, (string) $row['description']);
+				$metat = preg_replace('/the\s*naradmuni/i', $siteTitle, (string) $row['metat']);
+				$metad = preg_replace('/the\s*naradmuni/i', $siteTitle, (string) $row['metad']);
+				$oldBits = array('TheNaradMuni', 'द नारदमुनि', 'नारदमुनि');
+				$newBits = array($siteTitle, $siteTitle, $siteTitle);
+				$heading = str_replace($oldBits, $newBits, $heading === null ? (string) $row['page'] : $heading);
+				$body = str_replace($oldBits, $newBits, $body === null ? (string) $row['description'] : $body);
+				$metat = str_replace($oldBits, $newBits, $metat === null ? (string) $row['metat'] : $metat);
+				$metad = str_replace($oldBits, $newBits, $metad === null ? (string) $row['metad'] : $metad);
+				if ($heading !== (string) $row['page'] || $body !== (string) $row['description'] || $metat !== (string) $row['metat'] || $metad !== (string) $row['metad']) {
+					$h = mysqli_real_escape_string($con, $heading);
+					$b = mysqli_real_escape_string($con, $body);
+					$t = mysqli_real_escape_string($con, $metat);
+					$d = mysqli_real_escape_string($con, $metad);
+					mysqli_query($con, "UPDATE `pages` SET `page`='$h', `description`='$b', `metat`='$t', `metad`='$d' WHERE `page_url`='$slug' LIMIT 1");
+				}
 				continue;
 			}
 			$name = mysqli_real_escape_string($con, $p['page']);

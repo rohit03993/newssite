@@ -59,7 +59,7 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>
             <span class="city-btn-label">शहर चुनें</span>
           </button>
-          <button type="button" class="icon-btn" aria-label="सूचनाएँ" title="सूचनाएँ">
+          <button type="button" class="icon-btn" id="notify-btn" data-site="<?php echo nm_h($siteTitle); ?>" aria-label="सूचनाएँ" title="सूचनाएँ">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5m6 0a3 3 0 1 1-6 0"/></svg>
           </button>
         </div>
@@ -244,6 +244,6 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
       <p class="copy">Copyright © <?php echo date('Y'); ?> <?php echo nm_h($siteTitle); ?>. All Rights Reserved.</p>
     </div>
   </footer>
-  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>"></script>
+  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
 </body>
 </html>
