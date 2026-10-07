@@ -129,9 +129,9 @@ $output = '';
                                         }
                                     }
                             ?>
-                            <tr>
-							<td><?php echo $i+$k; ?></td>
-							<td>
+                            <tr class="nm-news-card">
+							<td class="nm-card-sn" data-label=""><?php echo $i+$k; ?></td>
+							<td class="nm-card-title" data-label="Title">
                               <div class="nm-title-cell"><?php echo htmlspecialchars(function_exists('nm_plain_title') ? nm_plain_title($faq[$k]["title"]) : strip_tags((string) $faq[$k]["title"])); ?>
                               <?php if (!empty($faq[$k]["latest_news"]) && $faq[$k]["latest_news"] === "Yes") { ?>
                                 <span class="badge badge-danger" style="font-size:10px;vertical-align:middle;">Breaking</span>
@@ -166,13 +166,13 @@ $output = '';
                               ?>
                               <code class="nm-url-cell" title="<?php echo htmlspecialchars((string) $faq[$k]["newsurl"]); ?>"><?php echo htmlspecialchars((string) $faq[$k]["newsurl"]); ?></code>
                             </td>
-                            <td><?php echo htmlspecialchars($catName); ?></td>
-                            <td>
+                            <td class="nm-card-cat" data-label="Category"><?php echo htmlspecialchars($catName); ?></td>
+                            <td class="nm-card-photo" data-label="Photo">
                                 <?php if (!empty($faq[$k]["image"])) { ?>
                                 <img src="../images/news/<?php echo htmlspecialchars($faq[$k]["image"]); ?>" width="72" height="54" class="img-thumbnail" alt="" loading="lazy" decoding="async">
                                 <?php } else { echo "—"; } ?>
                             </td>
-                            <td>
+                            <td class="nm-card-status" data-label="Status">
                                    <form id="SubmitForm<?php echo $faq[$k]["newsid"]; ?>">
                                     <select name="status" class="status custom-select" id="<?php echo $faq[$k]["newsid"]; ?>">
                                         <option value="<?php echo htmlspecialchars((string) $faq[$k]["status"]); ?>"><?php echo htmlspecialchars((string) $faq[$k]["status"]); ?></option>
@@ -182,7 +182,7 @@ $output = '';
                                       </select>
                                     </form>
                             </td>
-                            <td class="nm-date-cell">
+                            <td class="nm-date-cell" data-label="Date">
                             <?php
                             echo htmlspecialchars($faq[$k]["date"]);
                             echo '<br><span class="nm-muted">' . htmlspecialchars($faq[$k]["time"]) . '</span>';
@@ -196,7 +196,7 @@ $output = '';
                             }
                             ?>
                             </td>
-                            <td class="nm-views-cell">
+                            <td class="nm-views-cell" data-label="Views">
                             <?php
                             $nid = (int) $faq[$k]["newsid"];
                             if (!is_array($viewCounts)) {
@@ -218,7 +218,7 @@ $output = '';
                             }
                             ?>
                             </td>
-                             <td class="nm-actions-cell">
+                             <td class="nm-actions-cell" data-label="Action">
                                  <a class="btn btn-info" href="<?php echo $publicroot.'news/'.$faq[$k]["newsurl"]; ?>" target="_blank" title="View on public site"><i class="fas fa-eye"></i></a>
                                 <a class="btn btn-warning text-white" href="edit_news.php?eid=<?php echo (int) $faq[$k]["newsid"]; ?>"><i class="fas fa-edit"></i></a>
                                 <button type="button" class="nm-news-delete btn btn-danger text-white" data-newsid="<?php echo (int) $faq[$k]["newsid"]; ?>" title="Delete article" aria-label="Delete article"><i class="fas fa-trash-alt"></i></button>
