@@ -568,6 +568,17 @@ strong, b { font-weight: 700; }
   margin-bottom: 10px;
 }
 .crumb a { color: var(--accent); }
+.article-kicker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 10px;
+}
+.article-kicker .crumb,
+.article-kicker .news-date {
+  margin: 0;
+}
 
 .h1 {
   font-size: 33px;

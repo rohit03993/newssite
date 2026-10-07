@@ -63,7 +63,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=4">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=5">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
@@ -110,8 +110,15 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
         <p><a href="<?php echo nm_h(nm_url('/')); ?>">Back to home</a></p>
       <?php else: ?>
         <article>
-          <?php if (!empty($article['cat_url'])): ?>
-            <div class="crumb"><a href="<?php echo nm_h(nm_url('/category/' . $article['cat_url'])); ?>"><?php echo nm_h($article['hindi_name']); ?></a></div>
+          <?php if (!empty($article['cat_url']) || !empty($article['date'])): ?>
+            <div class="article-kicker">
+              <?php if (!empty($article['cat_url'])): ?>
+                <div class="crumb"><a href="<?php echo nm_h(nm_url('/category/' . $article['cat_url'])); ?>"><?php echo nm_h($article['hindi_name']); ?></a></div>
+              <?php endif; ?>
+              <?php if (!empty($article['date'])): ?>
+                <time class="news-date news-date--article"><?php echo nm_h($article['date']); ?></time>
+              <?php endif; ?>
+            </div>
           <?php endif; ?>
           <h1 class="h1 news-title"><?php echo nm_title_html($article['title']); ?></h1>
           <div class="meta-row">
@@ -129,9 +136,6 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
                   <p class="byline-desk"><?php echo nm_h($siteTitle); ?><?php echo $place !== '' ? ', ' . nm_h($place) : ''; ?></p>
                 </div>
               </div>
-              <?php if (!empty($article['date'])): ?>
-                <time class="news-date news-date--article"><?php echo nm_h($article['date']); ?></time>
-              <?php endif; ?>
             </div>
             <?php echo nm_share_actions($headline, $shareUrl); ?>
           </div>
