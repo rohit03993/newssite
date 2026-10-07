@@ -6,7 +6,7 @@ $nmBrand = function_exists('nm_brand_mark') ? nm_brand_mark(isset($con) ? $con :
 $nmMenuTitle = $nmBrand['title'] !== '' ? $nmBrand['title'] : 'News';
 if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
-	echo '<link rel="stylesheet" href="css/admin-modern.css?v=22">' . "\n";
+	echo '<link rel="stylesheet" href="css/admin-modern.css?v=23">' . "\n";
 	if ($nmBrand['favicon'] !== '') {
 		echo '<script>var nmIcon=document.createElement("link");nmIcon.rel="icon";nmIcon.href=' . json_encode($nmBrand['favicon']) . ';document.head.appendChild(nmIcon);</script>' . "\n";
 	}

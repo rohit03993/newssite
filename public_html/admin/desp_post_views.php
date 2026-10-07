@@ -1,5 +1,6 @@
 <?php
 include "config.php";
+require_once __DIR__ . "/admin_helpers.php";
 require_once("dbcontroller.php");
 require_once("pagination.class.php");
 $db_handle = new DBController();
@@ -132,7 +133,14 @@ $to = min($start + count($faq), $rowcount);
 							<td><?php echo $i++; ?></td>
                             <td><?php echo htmlspecialchars($faq[$k]["title"]); ?></td>
                             <td><?php echo htmlspecialchars($faq[$k]["date"]); ?></td>
-                            <td><span class="badge badge-pill badge-primary" style="font-size:14px;"><b><?php echo (int) $faq[$k]["post_views"]; ?></b></span></td>
+                            <td><span class="badge badge-pill badge-primary" style="font-size:14px;"><b><?php
+                            $shownViews = (int) $faq[$k]["post_views"];
+                            if (function_exists("nm_view_bases") && !empty($faq[$k]["newsid"])) {
+                                $oneBase = nm_view_bases($con, array((int) $faq[$k]["newsid"]));
+                                $shownViews += isset($oneBase[(int) $faq[$k]["newsid"]]) ? (int) $oneBase[(int) $faq[$k]["newsid"]] : 0;
+                            }
+                            echo $shownViews;
+                            ?></b></span></td>
 						  </tr>
                         <?php
                         }

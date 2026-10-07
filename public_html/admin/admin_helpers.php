@@ -451,6 +451,81 @@ if (!function_exists('nm_can_manage_news')) {
  * @param int[] $ids
  * @return array<int,int>|null
  */
+if (!function_exists('nm_ensure_news_view_base')) {
+	function nm_ensure_news_view_base($con)
+	{
+		if (!($con instanceof mysqli)) {
+			return false;
+		}
+		return (bool) mysqli_query(
+			$con,
+			"CREATE TABLE IF NOT EXISTS `news_view_base` (
+				`newsid` INT NOT NULL,
+				`base_count` INT NOT NULL DEFAULT 0,
+				PRIMARY KEY (`newsid`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+		);
+	}
+}
+
+if (!function_exists('nm_view_bases')) {
+	function nm_view_bases($con, array $ids)
+	{
+		$out = array();
+		$ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+		foreach ($ids as $id) {
+			$out[$id] = 0;
+		}
+		if (!$ids || !($con instanceof mysqli)) {
+			return $out;
+		}
+		$list = implode(',', $ids);
+		$q = @mysqli_query($con, "SELECT `newsid`, `base_count` FROM `news_view_base` WHERE `newsid` IN ($list)");
+		if ($q instanceof mysqli_result) {
+			while ($row = mysqli_fetch_assoc($q)) {
+				$out[(int) $row['newsid']] = (int) $row['base_count'];
+			}
+		}
+		return $out;
+	}
+}
+
+if (!function_exists('nm_set_displayed_views')) {
+	function nm_set_displayed_views($con, $newsid, $display)
+	{
+		$newsid = (int) $newsid;
+		$display = (int) $display;
+		if ($newsid < 1 || $display < 0 || $display > 99999999 || !($con instanceof mysqli)) {
+			return false;
+		}
+		if (!nm_ensure_news_view_base($con)) {
+			return false;
+		}
+		$exists = mysqli_query($con, "SELECT `newsid` FROM `news` WHERE `newsid`='$newsid' LIMIT 1");
+		if (!($exists instanceof mysqli_result) || mysqli_num_rows($exists) < 1) {
+			return false;
+		}
+		$real = 0;
+		$count = mysqli_query($con, "SELECT COUNT(*) AS c FROM `news_views` WHERE `newsid`='$newsid'");
+		if ($count instanceof mysqli_result && ($row = mysqli_fetch_assoc($count))) {
+			$real = (int) $row['c'];
+		}
+		$base = $display - $real;
+		$stmt = mysqli_prepare(
+			$con,
+			"INSERT INTO `news_view_base` (`newsid`, `base_count`) VALUES (?, ?)
+			 ON DUPLICATE KEY UPDATE `base_count`=VALUES(`base_count`)"
+		);
+		if (!$stmt) {
+			return false;
+		}
+		mysqli_stmt_bind_param($stmt, 'ii', $newsid, $base);
+		$ok = mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		return (bool) $ok;
+	}
+}
+
 if (!function_exists('nm_page_view_counts')) {
 	function nm_page_view_counts($con, array $ids)
 	{
@@ -472,6 +547,11 @@ if (!function_exists('nm_page_view_counts')) {
 		}
 		while ($row = mysqli_fetch_assoc($q)) {
 			$out[(int) $row['newsid']] = (int) $row['c'];
+		}
+		nm_ensure_news_view_base($con);
+		$bases = nm_view_bases($con, $ids);
+		foreach ($out as $id => $count) {
+			$out[$id] = $count + (isset($bases[$id]) ? (int) $bases[$id] : 0);
 		}
 		return $out;
 	}

@@ -57,7 +57,12 @@ function nm_news_view_count($con, $newsid) {
         while ($q && mysqli_fetch_row($q)) {
             $n++;
         }
-        return $n;
+        $base = 0;
+        $bq = @mysqli_query($con, "SELECT `base_count` FROM `news_view_base` WHERE `newsid`='$newsid' LIMIT 1");
+        if ($bq instanceof mysqli_result && ($brow = mysqli_fetch_assoc($bq))) {
+            $base = (int) $brow["base_count"];
+        }
+        return $n + $base;
     } catch (Throwable $e) {
         return 0;
     }
@@ -86,7 +91,12 @@ function nm_batch_view_counts($con, array $ids) {
             while ($q && mysqli_fetch_row($q)) {
                 $n++;
             }
-            $out[$id] = $n;
+            $base = 0;
+            $bq = @mysqli_query($con, "SELECT `base_count` FROM `news_view_base` WHERE `newsid`='$id' LIMIT 1");
+            if ($bq instanceof mysqli_result && ($brow = mysqli_fetch_assoc($bq))) {
+                $base = (int) $brow["base_count"];
+            }
+            $out[$id] = $n + $base;
         } catch (Throwable $e) {
             $out[$id] = 0;
         }

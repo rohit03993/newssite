@@ -203,8 +203,16 @@ $output = '';
                                 echo "—";
                             } else {
                                 $vc = isset($viewCounts[$nid]) ? (int) $viewCounts[$nid] : 0;
-                                echo '<span class="nm-views-num">' . number_format($vc) . '</span>';
-                                echo '<span class="nm-muted">views</span>';
+                                if (function_exists("nm_is_admin") && nm_is_admin($con)) {
+                                    echo '<form method="post" action="set_news_views.php" class="nm-view-form">';
+                                    echo '<input type="hidden" name="newsid" value="' . $nid . '">';
+                                    echo '<input class="nm-view-input" type="number" name="views" min="0" max="99999999" value="' . $vc . '" aria-label="Views">';
+                                    echo '<button type="submit" class="nm-view-save">Set</button>';
+                                    echo '</form>';
+                                } else {
+                                    echo '<span class="nm-views-num">' . number_format($vc) . '</span>';
+                                    echo '<span class="nm-muted">views</span>';
+                                }
                             }
                             ?>
                             </td>

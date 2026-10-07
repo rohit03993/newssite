@@ -76,10 +76,14 @@ function nm_news_view_total($newsid)
         'i',
         array($id)
     );
-    if (!$rows || !isset($rows[0]['c'])) {
-        return 0;
-    }
-    return (int) $rows[0]['c'];
+    $real = ($rows && isset($rows[0]['c'])) ? (int) $rows[0]['c'] : 0;
+    $baseRows = nm_rows(
+        "SELECT base_count FROM news_view_base WHERE newsid = ? LIMIT 1",
+        'i',
+        array($id)
+    );
+    $base = ($baseRows && isset($baseRows[0]['base_count'])) ? (int) $baseRows[0]['base_count'] : 0;
+    return $real + $base;
 }
 
 function nm_record_news_view($newsid)
