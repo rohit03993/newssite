@@ -1482,10 +1482,10 @@ code {
   }
   .nm-news-table tr.nm-news-card {
     display: grid !important;
-    grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: 56px minmax(0, 1fr) minmax(128px, auto);
     grid-template-areas:
       "photo title title"
-      "cat date date"
+      "photo cat date"
       "status status views"
       "actions actions actions";
     column-gap: 8px;
@@ -1523,10 +1523,10 @@ code {
   .nm-news-table .nm-views-cell { grid-area: views; }
   .nm-news-table .nm-actions-cell { grid-area: actions; }
   .nm-news-table .nm-card-photo img {
-    width: 48px;
-    height: 48px !important;
+    width: 56px;
+    height: 56px !important;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     display: block;
   }
   .nm-news-table .nm-card-title {
@@ -1552,6 +1552,11 @@ code {
     font-size: 11px;
     line-height: 1.2;
     color: #64748b;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .nm-news-table .nm-date-cell br {
     display: none;
@@ -1604,6 +1609,7 @@ code {
     flex-wrap: nowrap;
     gap: 6px;
     align-items: center;
+    justify-content: flex-end;
     min-width: 0 !important;
   }
   .nm-news-table .nm-actions-cell .btn {
