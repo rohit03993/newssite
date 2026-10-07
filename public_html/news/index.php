@@ -226,5 +226,15 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
     </div>
   </footer>
   <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
+  <?php if ($article && !empty($article['newsid'])): ?>
+  <script>
+    fetch(<?php echo json_encode(nm_url('/view-hit.php')); ?>, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "newsid=<?php echo (int) $article['newsid']; ?>",
+      keepalive: true
+    }).catch(function () {});
+  </script>
+  <?php endif; ?>
 </body>
 </html>

@@ -64,3 +64,28 @@ function nm_body_html($raw)
     }
     return $html;
 }
+
+function nm_record_news_view($newsid)
+{
+    $id = (int) $newsid;
+    if ($id < 1 || !nm_con()) {
+        return false;
+    }
+    $rows = nm_rows(
+        "SELECT newsid FROM news WHERE newsid = ? AND status = ? LIMIT 1",
+        'is',
+        array($id, 'Published')
+    );
+    if (!$rows) {
+        return false;
+    }
+    $con = nm_con();
+    $stmt = mysqli_prepare($con, "INSERT INTO `news_views` (`newsid`) VALUES (?)");
+    if (!$stmt) {
+        return false;
+    }
+    mysqli_stmt_bind_param($stmt, 'i', $id);
+    $ok = mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+    return (bool) $ok;
+}
