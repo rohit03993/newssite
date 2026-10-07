@@ -358,7 +358,6 @@ function nm_home()
     $recent = nm_recent(60);
     $pinned = nm_pinned_lead();
     $mains = nm_main_categories();
-    $stateIds = array_flip(nm_state_parent_ids());
 
     $narad = null;
     foreach ($mains as $cat) {
@@ -376,16 +375,6 @@ function nm_home()
             array('%कहिन%', '%kahin%', '%narad%kahin%')
         );
         $narad = isset($found[0]) ? $found[0] : null;
-    }
-
-    $topics = array();
-    foreach ($mains as $cat) {
-        $items = nm_news_by_category($cat['id'], 16);
-        $districts = array();
-        if (isset($stateIds[(string) $cat['id']])) {
-            $districts = nm_child_categories($cat['id']);
-        }
-        $topics[] = array('cat' => $cat, 'items' => $items, 'districts' => $districts);
     }
 
     $naradBlock = null;
@@ -433,17 +422,6 @@ function nm_home()
 
     $grid = nm_take_unique($recent, $seen, 24);
 
-    $other = array();
-    foreach ($topics as $section) {
-        if ($narad && (int) $section['cat']['id'] === (int) $narad['id']) {
-            continue;
-        }
-        $fromDb = count($section['items']);
-        $section['items'] = nm_take_unique($section['items'], $seen, 8);
-        $section['fromDb'] = $fromDb;
-        $other[] = $section;
-    }
-
     $brand = nm_settings(array(
         'brand_logo', 'brand_favicon',
         'social_facebook', 'social_x', 'social_youtube', 'social_whatsapp',
@@ -455,7 +433,6 @@ function nm_home()
         'secondaries' => $secondaries,
         'narad' => $naradBlock,
         'grid' => $grid,
-        'other' => $other,
         'cities' => nm_districts_with_news(),
         'nav' => $mains,
         'pages' => nm_pages(),

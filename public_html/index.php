@@ -191,8 +191,8 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
           <?php endif; ?>
 
           <?php
-          if (!empty($home['narad']) && (count($home['narad']['items']) > 0 || (int) $home['narad']['fromDb'] === 0)) {
-              echo nm_topic_block($home['narad'], true, (int) $home['narad']['fromDb'] === 0);
+          if (!empty($home['narad']) && count($home['narad']['items']) > 0) {
+              echo nm_topic_block($home['narad'], true, false);
           }
           ?>
 
@@ -205,10 +205,6 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
               <?php foreach ($home['grid'] as $i => $n) echo nm_card($n, $i < 2); ?>
             </div>
           </section>
-
-          <?php foreach ($home['other'] as $section) {
-              echo nm_topic_block($section, false, (int) $section['fromDb'] === 0);
-          } ?>
         </div>
       <?php endif; ?>
     </div>
