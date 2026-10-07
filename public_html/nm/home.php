@@ -83,6 +83,18 @@ function nm_is_business($c)
 
 function nm_main_categories()
 {
+    $flag = nm_settings(array('top_menu_ready'));
+    if (isset($flag['top_menu_ready']) && $flag['top_menu_ready'] === '1') {
+        return nm_rows(
+            "SELECT id, hindi_name, cat_url, metad, metat, parent, menu, short, latter, main_heading
+             FROM categories
+             WHERE menu = 'Yes'
+               AND cat_url IS NOT NULL AND cat_url != ''
+               AND hindi_name IS NOT NULL AND hindi_name != ''
+             ORDER BY CAST(`short` AS UNSIGNED) ASC, id ASC"
+        );
+    }
+
     $rows = nm_top_categories();
     $tests = array('nm_is_breaking', 'nm_is_kahin', 'nm_is_health', 'nm_is_entertain', 'nm_is_business');
     $used = array();

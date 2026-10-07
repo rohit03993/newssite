@@ -21,7 +21,7 @@ if (!isset($nmMe) || !is_array($nmMe)) {
 $nmMenuLogo = $nmBrand['logo'] !== '' ? $nmBrand['logo'] : (isset($nmMe['avatar']) ? $nmMe['avatar'] : '');
 $nmIsAdmin = !empty($nmMe['is_admin']);
 $nmAdminOnly = array(
-	'categories.php', 'edit_category.php', 'cleanup_news.php', 'rashifal.php', 'edit_rashifal.php',
+	'categories.php', 'edit_category.php', 'site_menu.php', 'cleanup_news.php', 'rashifal.php', 'edit_rashifal.php',
 	'pages.php', 'add_pages.php', 'edit_pages.php', 'video.php', 'notification.php', 'comments.php',
 	'post_views.php', 'rss_link.php', 'add_rss_link.php', 'edit_rss_link.php', 'ads.php',
 	'youtube_shorts.php', 'branding.php', 'whatsapp_share.php', 'team.php', 'admin_users.php',
@@ -64,6 +64,11 @@ if (!function_exists("nm_nav_active")) {
     <li>
       <a class="<?php echo nm_nav_active($nmPage, array("categories.php", "edit_category.php")); ?>" href="categories.php">
         <i class="fas fa-folder-open"></i> Categories
+      </a>
+    </li>
+    <li>
+      <a class="<?php echo nm_nav_active($nmPage, "site_menu.php"); ?>" href="site_menu.php">
+        <i class="fas fa-bars"></i> Top menu
       </a>
     </li>
     <?php } ?>

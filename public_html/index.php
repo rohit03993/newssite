@@ -70,10 +70,15 @@ $siteDescription = isset($nameRow['site_description']) ? $nameRow['site_descript
         <a href="<?php echo nm_h(nm_url('/')); ?>" class="active" aria-label="Home">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 3 12h2v8h6v-6h2v6h6v-8h2z"/></svg>
         </a>
-        <?php foreach ($nav as $c): if (empty($c['cat_url'])) continue; ?>
+        <?php
+        $navIds = array();
+        foreach ($nav as $c):
+          if (empty($c['cat_url'])) continue;
+          $navIds[(int) $c['id']] = true;
+        ?>
           <a href="<?php echo nm_h(nm_url('/category/' . $c['cat_url'])); ?>"><?php echo nm_h($c['hindi_name']); ?></a>
         <?php endforeach; ?>
-        <?php foreach ($topCities as $c): if (empty($c['cat_url'])) continue; ?>
+        <?php foreach ($topCities as $c): if (empty($c['cat_url']) || isset($navIds[(int) $c['id']])) continue; ?>
           <a href="<?php echo nm_h(nm_url('/category/' . $c['cat_url'])); ?>"><?php echo nm_h($c['hindi_name']); ?></a>
         <?php endforeach; ?>
       </div>

@@ -239,11 +239,12 @@ getresult("desp_categories.php");
             </div>
 
             <div class="col-md-6 form-group group">
-            <label class="control-label">Show In Menu</label>
+            <label class="control-label">Show in top menu</label>
             <select class="custom-select" name="menu">
                 <option value="No" selected>No</option>
             	<option value="Yes">Yes</option>
             </select>
+            <small class="form-text text-muted">You can also tick this category on the Top menu page.</small>
             </div>
 
             <div class="col-md-12 form-group group">

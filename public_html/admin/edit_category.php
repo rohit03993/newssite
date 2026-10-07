@@ -154,11 +154,12 @@ $curMenu = (isset($rs["menu"]) && $rs["menu"] === "Yes") ? "Yes" : "No";
             </div>
 
             <div class="col-md-6 form-group group">
-            <label class="control-label">Show In Menu</label>
+            <label class="control-label">Show in top menu</label>
             <select class="custom-select" name="menu">
                 <option value="No"<?php echo $curMenu === "No" ? " selected" : ""; ?>>No</option>
             	<option value="Yes"<?php echo $curMenu === "Yes" ? " selected" : ""; ?>>Yes</option>
             </select>
+            <small class="form-text text-muted">The blue bar is set on Top menu. Open Top menu and press Save to apply the list.</small>
             </div>
 
             <div class="col-md-12 form-group group">
