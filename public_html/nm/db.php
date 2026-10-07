@@ -83,3 +83,15 @@ function nm_url($path)
     $path = '/' . ltrim($path, '/');
     return nm_base() . $path;
 }
+
+function nm_public_origin()
+{
+    $host = isset($_SERVER['HTTP_HOST']) ? trim((string) $_SERVER['HTTP_HOST']) : 'localhost';
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+        || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
+    if (!$https && stripos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false) {
+        $https = true;
+    }
+    return ($https ? 'https' : 'http') . '://' . $host . nm_base();
+}
