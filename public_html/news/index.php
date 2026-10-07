@@ -133,6 +133,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
                 <time class="news-date news-date--article"><?php echo nm_h($article['date']); ?></time>
               <?php endif; ?>
             </div>
+            <?php echo nm_share_actions($headline, $shareUrl); ?>
           </div>
           <?php
             $summary = trim(strip_tags((string) $article['short_description']));
