@@ -163,6 +163,17 @@ $output = '';
                               if ($authorName !== "") {
                                   echo '<a class="nm-byline" href="news.php?author=' . $tid . '">By ' . htmlspecialchars($authorName) . '</a>';
                               }
+                              $phoneMeta = trim($catName);
+                              $phoneWhen = trim((string) $faq[$k]["date"]);
+                              if (!empty($faq[$k]["time"])) {
+                                  $phoneWhen = trim($phoneWhen . " " . $faq[$k]["time"]);
+                              }
+                              if ($phoneWhen !== "") {
+                                  $phoneMeta = $phoneMeta === "" ? $phoneWhen : $phoneMeta . " · " . $phoneWhen;
+                              }
+                              if ($phoneMeta !== "") {
+                                  echo '<p class="nm-phone-meta">' . htmlspecialchars($phoneMeta) . '</p>';
+                              }
                               ?>
                               <code class="nm-url-cell" title="<?php echo htmlspecialchars((string) $faq[$k]["newsurl"]); ?>"><?php echo htmlspecialchars((string) $faq[$k]["newsurl"]); ?></code>
                             </td>
