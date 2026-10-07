@@ -15,7 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $newsid = isset($_POST["newsid"]) ? (int) $_POST["newsid"] : 0;
-$views = isset($_POST["views"]) ? (int) $_POST["views"] : -1;
+$viewsRaw = isset($_POST["views"]) ? preg_replace('/[^\d]/', '', (string) $_POST["views"]) : '';
+$views = ($viewsRaw === '') ? -1 : (int) $viewsRaw;
 if ($newsid < 1 || $views < 0 || $views > 99999999) {
 	nm_js_notice("Type a view number from 0 up.", "news.php", "error");
 }

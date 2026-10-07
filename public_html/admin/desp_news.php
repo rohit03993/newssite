@@ -206,11 +206,10 @@ $output = '';
                                 if (function_exists("nm_is_admin") && nm_is_admin($con)) {
                                     echo '<form method="post" action="set_news_views.php" class="nm-view-form">';
                                     echo '<input type="hidden" name="newsid" value="' . $nid . '">';
-                                    echo '<span class="nm-view-box">';
-                                    echo '<svg class="nm-view-eye" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-                                    echo '<input class="nm-view-input" type="number" name="views" min="0" max="99999999" value="' . $vc . '" aria-label="Views">';
-                                    echo '<button type="submit" class="nm-view-save" title="Save this number" aria-label="Save views"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>';
-                                    echo '</span>';
+                                    echo '<div class="nm-view-box">';
+                                    echo '<input class="nm-view-input" type="text" inputmode="numeric" name="views" value="' . number_format($vc) . '" aria-label="Views">';
+                                    echo '<button type="submit" class="nm-view-save" title="Save this number" aria-label="Save views">Save</button>';
+                                    echo '</div>';
                                     echo '</form>';
                                 } else {
                                     echo '<span class="nm-views-num">' . number_format($vc) . '</span>';
