@@ -8,7 +8,7 @@
       }
     }
     echo htmlspecialchars($nmFoot);
-  ?> Admin</p>
+  ?></p>
 </div>
 <script src="js/nm-dialog.js?v=1"></script>
 <script src="js/all.js" defer></script>

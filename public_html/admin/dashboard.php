@@ -79,8 +79,17 @@ function nm_dash_count(mysqli $con, string $sql): int {
             </ol>
     <div class="nm-dash-wrap">
         <div class="nm-dash-hero">
-          <?php if (!empty($nmMe['avatar'])) { ?>
-            <img src="<?php echo htmlspecialchars($nmMe['avatar']); ?>" alt="">
+          <?php
+            $nmDashMark = function_exists('nm_brand_mark') ? nm_brand_mark($con) : array('logo' => '', 'favicon' => '');
+            $nmDashIcon = '';
+            if (!empty($nmDashMark['favicon'])) {
+              $nmDashIcon = $nmDashMark['favicon'];
+            } elseif (!empty($nmDashMark['logo'])) {
+              $nmDashIcon = $nmDashMark['logo'];
+            }
+          ?>
+          <?php if ($nmDashIcon !== '') { ?>
+            <img src="<?php echo htmlspecialchars($nmDashIcon); ?>" alt="" style="object-fit:contain;background:#fff;padding:8px;">
           <?php } else { ?>
             <span class="nm-dash-hero__letter"><?php echo htmlspecialchars($nmMe['initial']); ?></span>
           <?php } ?>
