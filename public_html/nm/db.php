@@ -36,6 +36,8 @@ function nm_con()
     }
     mysqli_set_charset($con, 'utf8mb4');
     date_default_timezone_set('Asia/Kolkata');
+    require_once __DIR__ . '/schedule.php';
+    nm_publish_due_scheduled($con, false);
     return $con;
 }
 

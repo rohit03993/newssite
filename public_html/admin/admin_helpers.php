@@ -104,6 +104,7 @@ if (!function_exists('nm_clean_description_html')) {
 if (!function_exists('nm_resolve_publish_schedule')) {
 	function nm_resolve_publish_schedule($post, $defaultPub = '')
 	{
+		date_default_timezone_set('Asia/Kolkata');
 		$mode = isset($post['publish_mode']) ? trim((string) $post['publish_mode']) : 'now';
 		if ($mode !== 'schedule') {
 			$mode = 'now';

@@ -5,6 +5,10 @@ if (!function_exists('nm_news_scope_clause')) {
 }
 require_once("dbcontroller.php");
 require_once("pagination.class.php");
+require_once __DIR__ . '/../nm/schedule.php';
+if (isset($con) && $con instanceof mysqli) {
+    nm_publish_due_scheduled($con, true);
+}
 $db_handle = new DBController();
 $perPage = new PerPage();
 
