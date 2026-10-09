@@ -67,7 +67,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=9">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=10">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }

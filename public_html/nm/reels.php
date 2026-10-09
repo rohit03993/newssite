@@ -74,7 +74,7 @@ function nm_fb_embed_src($url)
     }
     return 'https://www.facebook.com/plugins/video.php?href='
         . rawurlencode($url)
-        . '&show_text=false&width=280&height=500';
+        . '&show_text=false&width=267&height=476&t=0';
 }
 
 function nm_fb_reels_public($con)
