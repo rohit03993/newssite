@@ -30,6 +30,7 @@ $authorPhoto = ($authorFile !== '' && !preg_match('/logo|favicon|appicon|narad/i
     ? nm_url('/team/' . rawurlencode($authorFile))
     : '';
 $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] : '';
+$trendReels = $article ? nm_fb_reels_public(nm_con()) : array();
 ?><!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -67,7 +68,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=10">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=11">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
@@ -170,40 +171,6 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
               <span class="story-views-label">बार देखा गया</span>
             </span>
           </div>
-          <?php
-            $trendReels = nm_fb_reels_public(nm_con());
-            if ($trendReels):
-          ?>
-            <section class="trend" aria-label="ट्रेंडिंग">
-              <div class="trend-head">
-                <span class="trend-live" aria-hidden="true"></span>
-                <h2>ट्रेंडिंग</h2>
-              </div>
-              <div class="trend-row">
-                <?php foreach ($trendReels as $reel): ?>
-                  <article class="trend-card">
-                    <div class="trend-frame">
-                      <iframe
-                        src="<?php echo nm_h($reel['embed']); ?>"
-                        title="<?php echo nm_h($reel['title'] !== '' ? $reel['title'] : 'Facebook video'); ?>"
-                        loading="lazy"
-                        scrolling="no"
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                        allowfullscreen></iframe>
-                      <button type="button" class="trend-tap" aria-label="Play video">
-                        <span aria-hidden="true">
-                          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                        </span>
-                      </button>
-                    </div>
-                    <?php if (trim((string) $reel['title']) !== ''): ?>
-                      <p class="trend-title"><?php echo nm_h($reel['title']); ?></p>
-                    <?php endif; ?>
-                  </article>
-                <?php endforeach; ?>
-              </div>
-            </section>
-          <?php endif; ?>
           <?php if (!empty($article['related'])): ?>
             <section class="related">
               <h2>ये भी पढ़ें</h2>
@@ -271,30 +238,72 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
       <p class="copy">Copyright © <?php echo date('Y'); ?> <?php echo nm_h($siteTitle); ?>. All Rights Reserved.</p>
     </div>
   </footer>
-  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
+  <?php if ($trendReels):
+    $trendFirst = $trendReels[0];
+    $trendList = array();
+    foreach ($trendReels as $reel) {
+        $trendList[] = array(
+            'embed' => $reel['embed'],
+            'title' => $reel['title'] !== '' ? $reel['title'] : 'Trending video',
+        );
+    }
+  ?>
+  <aside class="trend-float" id="trend-float" aria-label="Trending video">
+    <div class="trend-float-bar">
+      <span class="trend-live" aria-hidden="true"></span>
+      <strong>Trending video</strong>
+      <?php if (count($trendReels) > 1): ?>
+        <button type="button" class="trend-float-next" id="trend-next" aria-label="Next video">›</button>
+      <?php endif; ?>
+      <button type="button" class="trend-float-x" id="trend-close" aria-label="Close">×</button>
+    </div>
+    <div class="trend-frame">
+      <iframe
+        id="trend-video"
+        src="<?php echo nm_h($trendFirst['embed']); ?>"
+        title="<?php echo nm_h($trendFirst['title'] !== '' ? $trendFirst['title'] : 'Trending video'); ?>"
+        scrolling="no"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+      <button type="button" class="trend-tap" id="trend-play" aria-label="Play video">
+        <span aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+      </button>
+    </div>
+  </aside>
   <script>
     (function () {
-      var row = document.querySelector(".trend-row");
-      if (!row) return;
-      var startX = 0, startY = 0, moved = false;
-      row.addEventListener("touchstart", function (e) {
-        var t = e.changedTouches[0];
-        startX = t.clientX;
-        startY = t.clientY;
-        moved = false;
-      }, { passive: true });
-      row.addEventListener("touchmove", function (e) {
-        var t = e.changedTouches[0];
-        if (Math.abs(t.clientX - startX) > 8 || Math.abs(t.clientY - startY) > 8) moved = true;
-      }, { passive: true });
-      row.addEventListener("click", function (e) {
-        var btn = e.target.closest ? e.target.closest(".trend-tap") : null;
-        if (!btn || moved) return;
-        var frame = btn.closest(".trend-frame");
-        if (frame) frame.classList.add("is-on");
-      });
+      var box = document.getElementById("trend-float");
+      var frame = document.querySelector("#trend-float .trend-frame");
+      var video = document.getElementById("trend-video");
+      var play = document.getElementById("trend-play");
+      var closeBtn = document.getElementById("trend-close");
+      var next = document.getElementById("trend-next");
+      var list = <?php echo json_encode($trendList, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+      var index = 0;
+      if (play && frame) {
+        play.addEventListener("click", function () {
+          frame.classList.add("is-on");
+        });
+      }
+      if (closeBtn && box) {
+        closeBtn.addEventListener("click", function () {
+          box.style.display = "none";
+        });
+      }
+      if (next && video && list.length > 1) {
+        next.addEventListener("click", function () {
+          index = (index + 1) % list.length;
+          video.src = list[index].embed;
+          video.title = list[index].title;
+          if (frame) frame.classList.remove("is-on");
+        });
+      }
     })();
   </script>
+  <?php endif; ?>
+  <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
   <?php if ($article && !empty($article['newsid'])): ?>
   <script>
     fetch(<?php echo json_encode(nm_url('/view-hit.php')); ?>, {

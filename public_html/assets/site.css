@@ -2088,54 +2088,59 @@ article .author-box {
   .pwa-card h3 { font-size: 16px; }
 }
 
-.trend {
-  margin: 26px 0 8px;
-  clear: both;
+.trend-float {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 60;
+  width: 132px;
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.35);
 }
-.trend-head {
+.trend-float-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 6px;
+  padding: 6px 6px 6px 8px;
+  color: #fff;
 }
-.trend-head h2 {
-  margin: 0;
-  font-size: 18px;
+.trend-float-bar strong {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11px;
   line-height: 1.2;
   font-weight: 700;
+  white-space: nowrap;
 }
 .trend-live {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: #e11d48;
-  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.15);
+  background: #fb7185;
+  box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.25);
+  flex-shrink: 0;
 }
-.trend-row {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding: 4px 2px 14px;
-  scrollbar-width: none;
-}
-.trend-row::-webkit-scrollbar {
-  display: none;
-}
-.trend-card {
-  flex: 0 0 min(340px, 92%);
-  scroll-snap-align: center;
-  min-width: 0;
+.trend-float-x,
+.trend-float-next {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 16px;
+  padding: 0;
 }
 .trend-frame {
   container-type: inline-size;
   position: relative;
   aspect-ratio: 9 / 16;
-  border-radius: 22px;
   overflow: hidden;
-  background: #0b1220;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
+  background: #000;
 }
 .trend-frame iframe {
   position: absolute;
@@ -2165,32 +2170,22 @@ article .author-box {
   justify-content: center;
 }
 .trend-tap span {
-  width: 58px;
-  height: 58px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
 }
 .trend-frame.is-on .trend-tap {
   display: none;
 }
-.trend-title {
-  margin: 8px 2px 0;
-  font-size: 13px;
-  line-height: 1.35;
-  font-weight: 600;
-  color: var(--text);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 @media (min-width: 768px) {
-  .trend-card {
-    flex-basis: 300px;
-    scroll-snap-align: start;
+  .trend-float {
+    width: 168px;
+    right: 20px;
+    bottom: 20px;
   }
 }
