@@ -6,7 +6,7 @@ $nmBrand = function_exists('nm_brand_mark') ? nm_brand_mark(isset($con) ? $con :
 $nmMenuTitle = $nmBrand['title'] !== '' ? $nmBrand['title'] : 'News';
 if (!defined("NM_ADMIN_ASSETS")) {
 	define("NM_ADMIN_ASSETS", true);
-	echo '<link rel="stylesheet" href="css/admin-modern.css?v=34">' . "\n";
+	echo '<link rel="stylesheet" href="css/admin-modern.css?v=35">' . "\n";
 	if ($nmBrand['favicon'] !== '') {
 		echo '<script>var nmIcon=document.createElement("link");nmIcon.rel="icon";nmIcon.href=' . json_encode($nmBrand['favicon']) . ';document.head.appendChild(nmIcon);</script>' . "\n";
 	}
@@ -24,7 +24,7 @@ $nmAdminOnly = array(
 	'categories.php', 'edit_category.php', 'site_menu.php', 'cleanup_news.php', 'rashifal.php', 'edit_rashifal.php',
 	'pages.php', 'add_pages.php', 'edit_pages.php', 'video.php', 'notification.php', 'comments.php',
 	'post_views.php', 'rss_link.php', 'add_rss_link.php', 'edit_rss_link.php', 'ads.php',
-	'youtube_shorts.php', 'branding.php', 'whatsapp_share.php', 'team.php', 'admin_users.php',
+	'youtube_shorts.php', 'trending_videos.php', 'branding.php', 'whatsapp_share.php', 'team.php', 'admin_users.php',
 	'slider.php', 'users.php', 'jobs.php',
 );
 if (!$nmIsAdmin && in_array($nmPage, $nmAdminOnly, true)) {
@@ -139,6 +139,11 @@ if (!function_exists("nm_nav_active")) {
     <li>
       <a class="<?php echo nm_nav_active($nmPage, "youtube_shorts.php"); ?>" href="youtube_shorts.php">
         <i class="fab fa-youtube"></i> YouTube Shorts
+      </a>
+    </li>
+    <li>
+      <a class="<?php echo nm_nav_active($nmPage, "trending_videos.php"); ?>" href="trending_videos.php">
+        <i class="fab fa-facebook"></i> Trending videos
       </a>
     </li>
     <li>

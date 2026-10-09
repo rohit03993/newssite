@@ -1,6 +1,7 @@
 <?php
 require dirname(__DIR__) . '/nm/article.php';
 require dirname(__DIR__) . '/nm/view.php';
+require dirname(__DIR__) . '/nm/reels.php';
 
 $slug = isset($_GET['url']) ? trim((string) $_GET['url']) : '';
 $article = $slug !== '' ? nm_article($slug) : null;
@@ -66,7 +67,7 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
   <meta name="twitter:image" content="<?php echo nm_h($shareImage); ?>">
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=8">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=9">
   <style>
     :root { --accent: <?php echo nm_h($accentHex); ?>; --on-accent: <?php echo nm_h(nm_accent_ink($accentHex)); ?>; }
     body { font-family: "Noto Sans Devanagari", system-ui, sans-serif; }
@@ -169,6 +170,40 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
               <span class="story-views-label">बार देखा गया</span>
             </span>
           </div>
+          <?php
+            $trendReels = nm_fb_reels_public(nm_con());
+            if ($trendReels):
+          ?>
+            <section class="trend" aria-label="ट्रेंडिंग">
+              <div class="trend-head">
+                <span class="trend-live" aria-hidden="true"></span>
+                <h2>ट्रेंडिंग</h2>
+              </div>
+              <div class="trend-row">
+                <?php foreach ($trendReels as $reel): ?>
+                  <article class="trend-card">
+                    <div class="trend-frame">
+                      <iframe
+                        src="<?php echo nm_h($reel['embed']); ?>"
+                        title="<?php echo nm_h($reel['title'] !== '' ? $reel['title'] : 'Facebook video'); ?>"
+                        loading="lazy"
+                        scrolling="no"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+                      <button type="button" class="trend-tap" aria-label="Play video">
+                        <span aria-hidden="true">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </span>
+                      </button>
+                    </div>
+                    <?php if (trim((string) $reel['title']) !== ''): ?>
+                      <p class="trend-title"><?php echo nm_h($reel['title']); ?></p>
+                    <?php endif; ?>
+                  </article>
+                <?php endforeach; ?>
+              </div>
+            </section>
+          <?php endif; ?>
           <?php if (!empty($article['related'])): ?>
             <section class="related">
               <h2>ये भी पढ़ें</h2>
@@ -237,6 +272,29 @@ $place = ($article && !empty($article['hindi_name'])) ? $article['hindi_name'] :
     </div>
   </footer>
   <script src="<?php echo nm_h(nm_url('/assets/site.js')); ?>?v=2"></script>
+  <script>
+    (function () {
+      var row = document.querySelector(".trend-row");
+      if (!row) return;
+      var startX = 0, startY = 0, moved = false;
+      row.addEventListener("touchstart", function (e) {
+        var t = e.changedTouches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+        moved = false;
+      }, { passive: true });
+      row.addEventListener("touchmove", function (e) {
+        var t = e.changedTouches[0];
+        if (Math.abs(t.clientX - startX) > 8 || Math.abs(t.clientY - startY) > 8) moved = true;
+      }, { passive: true });
+      row.addEventListener("click", function (e) {
+        var btn = e.target.closest ? e.target.closest(".trend-tap") : null;
+        if (!btn || moved) return;
+        var frame = btn.closest(".trend-frame");
+        if (frame) frame.classList.add("is-on");
+      });
+    })();
+  </script>
   <?php if ($article && !empty($article['newsid'])): ?>
   <script>
     fetch(<?php echo json_encode(nm_url('/view-hit.php')); ?>, {
