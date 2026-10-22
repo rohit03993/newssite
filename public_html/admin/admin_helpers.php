@@ -3,6 +3,30 @@
  * Shared admin helpers — escape HTML, category labels, CKEditor config.
  * Included from config.php so every admin page can use them.
  */
+
+if (!function_exists('nm_apply_request_root')) {
+	function nm_apply_request_root()
+	{
+		if (PHP_SAPI === 'cli' || empty($_SERVER['HTTP_HOST'])) {
+			return;
+		}
+		$host = trim((string) $_SERVER['HTTP_HOST']);
+		if (!preg_match('/^[A-Za-z0-9.\-:]+$/', $host)) {
+			return;
+		}
+		$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+			|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https');
+		if (!$https && stripos($host, 'localhost') === false && strpos($host, '127.0.0.1') === false) {
+			$https = true;
+		}
+		$origin = ($https ? 'https' : 'http') . '://' . $host . '/';
+		$GLOBALS['urlroot'] = $origin;
+		$GLOBALS['publicroot'] = $origin;
+		$GLOBALS['adminLoginUrl'] = $origin . 'manage.php';
+	}
+}
+nm_apply_request_root();
+
 if (!function_exists('nm_h')) {
 	function nm_h($v)
 	{

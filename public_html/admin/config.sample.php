@@ -1,7 +1,8 @@
 <?php
-    $urlroot = "https://khabarsetutu.com/";
-    $publicroot = "https://khabarsetutu.com/";
-    $adminLoginUrl = $urlroot . "manage.php";
+    // Web requests replace these with the domain the visitor opened.
+    $urlroot = "/";
+    $publicroot = "/";
+    $adminLoginUrl = "manage.php";
 
 if(!isset($_SESSION)){
 session_start();
@@ -19,7 +20,7 @@ session_start();
     $db_name = "PUT_HOSTINGER_DB_NAME";
 
  $con=mysqli_connect($server,$user,$pass,$db_name) or die("Could not connect DB S");
- mysqli_set_charset($con,"utf8");
+ mysqli_set_charset($con,"utf8mb4");
 if(isset($_SESSION['u_id'])){
     try {
         $uqry = mysqli_query($con,"SELECT `name` FROM `users` WHERE `u_id`='".mysqli_real_escape_string($con, (string)$_SESSION['u_id'])."'");
