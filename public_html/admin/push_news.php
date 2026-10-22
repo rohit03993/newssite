@@ -13,7 +13,11 @@ function naradmuni_send_news_push($con, $title, $body, $imageFile, $newsurl) {
     }
 
     $sql = "SELECT `token` FROM `tokens` WHERE `token` IS NOT NULL AND `token` != ''";
-    $result = mysqli_query($con, $sql);
+    try {
+        $result = mysqli_query($con, $sql);
+    } catch (Throwable $e) {
+        return false;
+    }
     if (!$result || mysqli_num_rows($result) < 1) {
         return false;
     }

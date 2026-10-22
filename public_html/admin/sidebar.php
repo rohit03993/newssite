@@ -11,7 +11,7 @@ if (!defined("NM_ADMIN_ASSETS")) {
 	if ($nmBrand['favicon'] !== '') {
 		echo '<script>var nmIcon=document.createElement("link");nmIcon.rel="icon";nmIcon.href=' . json_encode($nmBrand['favicon']) . ';document.head.appendChild(nmIcon);</script>' . "\n";
 	}
-	echo '<script src="js/nm-dialog.js?v=1"></script>' . "\n";
+	echo '<script src="js/nm-dialog.js?v=2"></script>' . "\n";
 }
 $nmPage = basename(isset($_SERVER["PHP_SELF"]) ? $_SERVER["PHP_SELF"] : "");
 if (!isset($nmMe) || !is_array($nmMe)) {

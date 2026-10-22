@@ -42,6 +42,9 @@
     if (isConfirm) {
       return /delete/.test(s) ? "Delete?" : "Please confirm";
     }
+    if (/sorry|error|fail|missing|not found/.test(s)) {
+      return "Couldn’t complete";
+    }
     if (/scheduled/.test(s)) {
       return "Scheduled";
     }

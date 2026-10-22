@@ -285,8 +285,15 @@ function nm_delete_news_article($con, $newsid, $knownViews = null, $opts = array
         }
     }
 
-    @mysqli_query($con, "DELETE FROM `news_cat` WHERE `news_id`='$newsid'");
-    @mysqli_query($con, "DELETE FROM `comments` WHERE `newsid`='$newsid'");
+    foreach (array(
+        "DELETE FROM `news_cat` WHERE `news_id`='$newsid'",
+        "DELETE FROM `comments` WHERE `newsid`='$newsid'",
+    ) as $optionalSql) {
+        try {
+            mysqli_query($con, $optionalSql);
+        } catch (Throwable $e) {
+        }
+    }
     // Skip per-row DELETE on news_views (millions of rows, often no index) — orphans cleaned later via CLI/orphan purge.
 
     $ex = mysqli_query($con, "DELETE FROM `news` WHERE `newsid`='$newsid' LIMIT 1");
