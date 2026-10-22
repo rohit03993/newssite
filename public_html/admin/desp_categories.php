@@ -65,7 +65,7 @@ $output = '';
 ?>
 
                         <div class="nm-table-wrap nm-table-wrap--fit">
-                        <table id="myTable" class="table table-bordered nm-cats-table">
+                        <table id="myTable" class="table table-bordered nm-cats-table nm-phone-cards">
                             <thead class="bg-info">
                               <tr>
 							<th>S.N.</th>

@@ -121,7 +121,7 @@ if ($curParent === "") {
 }
 $curMenu = (isset($rs["menu"]) && $rs["menu"] === "Yes") ? "Yes" : "No";
 ?>
-            <form id="SubmitForm" method="post">
+            <form id="SubmitForm" class="nm-plain-form" method="post">
 
             <div class="col-md-12 form-group group">
               <label class="control-label">Hindi Name:</label>
@@ -136,6 +136,7 @@ $curMenu = (isset($rs["menu"]) && $rs["menu"] === "Yes") ? "Yes" : "No";
 
             <div class="col-md-6 form-group group">
               <label class="control-label">Parent Category:</label>
+              <small class="form-text text-muted">Leave as None for a main category. Pick a parent to make this a subcategory. It then shows under that name on the site.</small>
                <select class="custom-select" id="maincat" name="parent">
                 <option value="0"<?php echo $curParent === "0" ? " selected" : ""; ?>>None</option>
             	<?php
@@ -159,7 +160,7 @@ $curMenu = (isset($rs["menu"]) && $rs["menu"] === "Yes") ? "Yes" : "No";
                 <option value="No"<?php echo $curMenu === "No" ? " selected" : ""; ?>>No</option>
             	<option value="Yes"<?php echo $curMenu === "Yes" ? " selected" : ""; ?>>Yes</option>
             </select>
-            <small class="form-text text-muted">The blue bar is set on Top menu. Open Top menu and press Save to apply the list.</small>
+            <small class="form-text text-muted">The top bar is set on Top menu. Open Top menu and press Save to apply the list.</small>
             </div>
 
             <div class="col-md-12 form-group group">

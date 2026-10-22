@@ -63,13 +63,13 @@ $output = '';
 
 ?>
 
-                        <table id="myTable" class="table table-bordered">
+                        <table id="myTable" class="table table-bordered nm-team-table nm-phone-cards">
                             <thead class="bg-info">
                               <tr>
                                 <th>S.N.</th>
                                 <th>Name</th>
                                 <th>Designation</th>
-                                <th>About</th>
+                                <th>Email</th>
                                 <th>Short Order</th>
                                 <th>Image</th>
                                 <th>Action</th>
@@ -100,12 +100,18 @@ $output = '';
                         }
                         print $output;
                         ?>
+                        </table>
 <script type="text/javascript" language="javascript" >
         $(document).ready(function(){
+        if ($.fn.DataTable.isDataTable('#myTable')) {
+          $('#myTable').DataTable().destroy();
+        }
         $('#myTable').DataTable( {
-           responsive: true,
+           responsive: false,
            "bPaginate": false,
-            "searching": false
+            "searching": false,
+            "autoWidth": false,
+            "ordering": false
            } );
         });
 

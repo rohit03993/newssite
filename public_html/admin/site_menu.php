@@ -187,7 +187,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
   <link rel="stylesheet" href="../include/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="../include/css/style.css">
-  <link rel="stylesheet" href="css/admin-modern.css?v=16">
+  <link rel="stylesheet" href="css/admin-modern.css?v=41">
   <script src="../include/js/jquery.min.js"></script>
   <?php if (!empty($nmHeadBrand["favicon"])) { ?>
   <link rel="icon" href="<?php echo nm_h($nmHeadBrand["favicon"]); ?>">
@@ -203,7 +203,7 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
     </ol>
     <div class="container-fluid page-content" style="max-width:860px;">
       <h2 style="margin-top:0;">Top menu</h2>
-      <p class="text-muted">Tick the categories you want in the blue bar under the logo. A smaller number shows first. Main categories, such as Madhya Pradesh, are listed before the districts. News is the number of published stories in that category. The home icon stays first.</p>
+      <p class="text-muted">Tick the categories that appear in the bar under the logo. A smaller number shows first. Main categories are listed before subcategories. News is the number of published stories in that category. The home icon stays first.</p>
       <?php if ($msg) { ?><div class="alert alert-success"><?php echo nm_h($msg); ?></div><?php } ?>
       <?php if ($err) { ?><div class="alert alert-danger"><?php echo nm_h($err); ?></div><?php } ?>
       <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
@@ -232,11 +232,11 @@ $nmHeadBrand = function_exists("nm_brand_mark") ? nm_brand_mark($con) : array("f
                 $group = $row["_on"] ? "on" : ($row["_child"] ? "child" : "main");
                 if ($group !== $lastGroup) {
                   $lastGroup = $group;
-                  $groupLabel = "On the blue bar now";
+                  $groupLabel = "On the top bar now";
                   if ($group === "main") {
                     $groupLabel = "Main categories";
                   } elseif ($group === "child") {
-                    $groupLabel = "Districts and other";
+                    $groupLabel = "Subcategories";
                   }
               ?>
               <tr class="menu-section">

@@ -115,10 +115,7 @@ if(isset($_POST['add']))
 <div id="content">
             <?php include"header.php"; ?>
             
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="dashboard.php">Home</a> <i class="fa fa-angle-right"></i> News</li>
-            </ol>
-<div class="container-fluid page-content">
+<div class="container-fluid page-content nm-news-page">
         <?php
         $tabAll = $nmAuthorFilter === '';
         $tabMe = $nmAuthorFilter === 'me';
@@ -151,19 +148,20 @@ if(isset($_POST['add']))
         <?php } else { ?>
         <p class="text-muted" style="margin:0 0 12px;">Showing only your stories. Edit or schedule from the list below.</p>
         <?php } ?>
-        <div class="row">
-        <div class="col-sm-4"><button class="btn btn-warning reset" type="reset"><i class="fas fa-redo-alt"></i> Reset</button> <button onclick="myFunction()" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
-        <a href="add_news.php" class="btn btn-success"><span class="fa fa-plus"></span> Add New </a>
-        <?php if ($nmIsAdmin) { ?>
-        <a href="cleanup_news.php" class="btn btn-outline-danger"><i class="fas fa-broom"></i> Cleanup old</a>
-        <?php } ?>
-        </div> 
-    <div class="EditstatusMsg col-sm-4"></div>
-    <div class="col-sm-4"></div>
-    </div> <hr>
+        <div class="nm-list-bar">
+          <div class="nm-list-actions">
+            <button class="btn btn-warning reset" type="button"><i class="fas fa-redo-alt"></i> Reset</button>
+            <button type="button" onclick="myFunction()" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+            <a href="add_news.php" class="btn btn-success"><span class="fa fa-plus"></span> Add news</a>
+            <?php if ($nmIsAdmin) { ?>
+            <a href="cleanup_news.php" class="btn btn-outline-danger"><i class="fas fa-broom"></i> Cleanup</a>
+            <?php } ?>
+          </div>
+          <div class="EditstatusMsg"></div>
+        </div>
     <div class="row">
         <div class="col-sm-12">
-    <form id="SearchForm" style="display:none;">
+    <form id="SearchForm" class="nm-filter" style="display:none;">
         
     <select name="pagination-setting" onChange="changePagination(this.value);" class="custom-select" id="pagination-setting" hidden="true">
     <option value="all-links">Display All Page Link</option>
@@ -224,7 +222,6 @@ if(isset($_POST['add']))
     </form>
         </div>
     </div>
-    <hr>
 <script>
 function myFunction() {
   var x = document.getElementById("SearchForm");

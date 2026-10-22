@@ -115,7 +115,7 @@ $to = min($start + count($faq), $rowcount);
 	(<?php echo (int) $perPage->perpage; ?> per page).
 	<small>Each site visit adds a row in <code>news_views</code>; this page counts those rows per article.</small>
 </p>
-                        <table id="myTable" class="table table-bordered">
+                        <table id="myTable" class="table table-bordered nm-views-table nm-phone-cards">
                             <thead class="bg-info">
                               <tr>
                                 <th>S.N.</th>
@@ -160,7 +160,8 @@ $(document).ready(function(){
     $('#myTable').DataTable().destroy();
   }
   $('#myTable').DataTable({
-    responsive: true,
+    responsive: false,
+    autoWidth: false,
     paging: false,
     searching: false,
     info: false,

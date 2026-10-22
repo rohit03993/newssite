@@ -87,16 +87,17 @@ $userRow=mysqli_fetch_array($res,MYSQLI_ASSOC);
                 <li class="breadcrumb-item"><a href="dashboard.php">Home</a> <i class="fa fa-angle-right"></i> Manage Team</li>
             </ol>
 <div class="container-fluid page-content">
-    <div class="row">
-        <div class="col-sm-4"><button class="btn btn-warning reset" type="reset"><i class="fas fa-redo-alt"></i> Reset</button> <button onclick="myFunction()" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add212"><span class="fa fa-plus"></span> Add New </button>
-        </div> 
-    <div class="EditstatusMsg col-sm-4"></div>
-    <div class="col-sm-4"></div>
-    </div> <hr>
+    <div class="nm-list-bar">
+        <div class="nm-list-actions">
+        <button class="btn btn-warning reset" type="button"><i class="fas fa-redo-alt"></i> Reset</button>
+        <button type="button" onclick="myFunction()" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add212"><span class="fa fa-plus"></span> Add</button>
+        </div>
+        <div class="EditstatusMsg"></div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
-            <form id="SearchForm" style="display:none;">
+            <form id="SearchForm" class="nm-filter" style="display:none;">
         
     <select name="pagination-setting" onChange="changePagination(this.value);" class="custom-select" id="pagination-setting" hidden="true">
     <option value="all-links">Display All Page Link</option>
@@ -115,7 +116,6 @@ $userRow=mysqli_fetch_array($res,MYSQLI_ASSOC);
     </form>
         </div>
     </div>
-    <hr>
 <script>
 x.style.display === "none";
 function myFunction() {

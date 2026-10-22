@@ -33,7 +33,7 @@ nm_shell_open($title, $desc);
   <?php if ($children): ?>
     <div class="district">
       <details>
-        <summary style="cursor:pointer;font-weight:600;margin-bottom:8px">जिला चुनें</summary>
+        <summary style="cursor:pointer;font-weight:600;margin-bottom:8px">उप श्रेणियाँ</summary>
         <div class="pills">
           <?php foreach ($children as $c): if (empty($c['cat_url'])) continue; ?>
             <a href="<?php echo nm_h(nm_url('/category/' . $c['cat_url'])); ?>"><?php echo nm_h($c['hindi_name']); ?></a>

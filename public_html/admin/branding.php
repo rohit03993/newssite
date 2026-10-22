@@ -129,7 +129,7 @@ if (isset($_POST["save_brand_color"])) {
 	}
 	$ok = nm_setting_set($con, "brand_accent", $pick);
 	if ($ok) {
-		$msg = "Brand colour saved. Refresh the public site to see it. The page stays white.";
+		$msg = "Colour combination saved. Refresh the public site to see the header, buttons, and links.";
 	} else {
 		$err = "Could not save the brand colour.";
 	}
@@ -200,7 +200,7 @@ if ($socialWhatsapp === "") {
   <link rel="stylesheet" href="../include/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="../include/css/style.css">
-  <link rel="stylesheet" href="css/admin-modern.css?v=16">
+  <link rel="stylesheet" href="css/admin-modern.css?v=41">
   <script src="../include/js/jquery.min.js"></script>
   <?php if (!empty($nmHeadBrand['favicon'])) { ?>
   <link rel="icon" href="<?php echo htmlspecialchars($nmHeadBrand['favicon']); ?>">
@@ -289,18 +289,22 @@ if ($socialWhatsapp === "") {
       </form>
 
       <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;margin-top:16px;">
-        <h3 style="margin-top:0;font-size:16px;">Brand colour</h3>
-        <p class="text-muted" style="margin-top:0;">The page background stays white. Pick the second colour to match the company logo. It is used on the menu line, links, and the city button highlight.</p>
+        <h3 style="margin-top:0;font-size:16px;">Colour combination</h3>
+        <p class="text-muted" style="margin-top:0;">The page background stays white. Each set changes the header bar and the highlight colour together, so they match the logo.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px;">
-          <?php foreach (nm_color_choices() as $key => $color) { ?>
+          <?php foreach (nm_color_choices() as $key => $color) {
+            $headerSwatch = isset($color['header']) ? $color['header'] : '#111111';
+          ?>
             <label style="display:flex;align-items:center;gap:8px;border:1px solid <?php echo $brandAccent === $key ? $color['hex'] : '#e5e7eb'; ?>;border-radius:8px;padding:8px 12px;margin:0;cursor:pointer;background:#fff;">
               <input type="radio" name="brand_accent" value="<?php echo htmlspecialchars($key); ?>" <?php echo $brandAccent === $key ? "checked" : ""; ?>>
-              <span style="width:22px;height:22px;border-radius:50%;background:<?php echo htmlspecialchars($color['hex']); ?>;display:inline-block;"></span>
+              <span style="width:36px;height:22px;border-radius:6px;background:<?php echo htmlspecialchars($headerSwatch); ?>;display:inline-flex;align-items:center;justify-content:flex-end;padding-right:3px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:<?php echo htmlspecialchars($color['hex']); ?>;display:inline-block;"></span>
+              </span>
               <span><?php echo htmlspecialchars($color['name']); ?></span>
             </label>
           <?php } ?>
         </div>
-        <button type="submit" name="save_brand_color" value="1" class="btn btn-danger" style="margin-top:14px;">Save colour</button>
+        <button type="submit" name="save_brand_color" value="1" class="btn btn-danger" style="margin-top:14px;">Save colours</button>
       </form>
 
       <form method="post" class="card" style="padding:20px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;margin-top:16px;">

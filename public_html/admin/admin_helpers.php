@@ -327,6 +327,28 @@ if (!function_exists('nm_brand_mark')) {
 	}
 }
 
+if (!function_exists('nm_admin_theme_css')) {
+	function nm_admin_theme_css($con)
+	{
+		$colors = dirname(__DIR__) . '/nm/colors.php';
+		if (is_file($colors)) {
+			require_once $colors;
+		}
+		if (!function_exists('nm_theme')) {
+			return '';
+		}
+		if (!function_exists('nm_setting_get')) {
+			require_once __DIR__ . '/site_settings_lib.php';
+		}
+		$key = 'red';
+		if ($con instanceof mysqli) {
+			$key = nm_setting_get($con, 'brand_accent', 'red');
+		}
+		$t = nm_theme($key);
+		return ':root{--nm-accent:' . $t['hex'] . ';--nm-accent-soft:' . $t['soft'] . ';--nm-sidebar:' . $t['header'] . ';}';
+	}
+}
+
 /** Display name, role, team id, and photo (team byline photo first, then admin profile/). */
 if (!function_exists('nm_cms_identity')) {
 	function nm_cms_identity($con, $userRow = null)
@@ -583,7 +605,7 @@ if (!function_exists('nm_js_notice')) {
 			'href' => (string) $href,
 			'type' => (string) $kind,
 		), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-		$css = 'css/admin-modern.css?v=22';
+		$css = 'css/admin-modern.css?v=41';
 		$js = 'js/nm-dialog.js?v=1';
 		if ($href !== '' && !headers_sent()) {
 			echo '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin</title>';

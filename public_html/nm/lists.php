@@ -57,6 +57,32 @@ function nm_count_news_by_category($catId)
     return $rows ? (int) $rows[0]['total'] : 0;
 }
 
+function nm_search_news($q, $limit)
+{
+    $q = trim((string) $q);
+    $q = str_replace(array('%', '_'), '', $q);
+    if (function_exists('mb_strlen')) {
+        if (mb_strlen($q) < 2) {
+            return array();
+        }
+    } elseif (strlen($q) < 2) {
+        return array();
+    }
+    $n = min(30, max(1, (int) $limit));
+    $like = '%' . $q . '%';
+    return nm_rows(
+        "SELECT n.newsid, n.title, n.newsurl, n.image, n.date, c.hindi_name, c.cat_url
+         FROM news n
+         LEFT JOIN categories c ON c.id = n.category
+         WHERE n.status = ? AND (n.newstype IS NULL OR n.newstype != 'Video')
+           AND (n.title LIKE ? OR n.short_description LIKE ?)
+         ORDER BY n.newsid DESC
+         LIMIT " . $n,
+        'sss',
+        array('Published', $like, $like)
+    );
+}
+
 function nm_latest_news($limit)
 {
     $n = min(40, max(1, (int) $limit));

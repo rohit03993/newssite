@@ -96,8 +96,8 @@ $output = '';
 ?>
 
                         <div class="nm-table-wrap nm-table-wrap--fit">
-                        <table id="myTable" class="table table-bordered nm-news-table">
-                            <thead class="bg-info">
+                        <table id="myTable" class="table nm-news-table">
+                            <thead>
                               <tr>
 							<th>S.N.</th>
                             <th>Title</th>

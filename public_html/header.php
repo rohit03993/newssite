@@ -60,7 +60,6 @@
 								</li>
 								<?= show_menu() ?>
                                 <li class="feed-link">
-									<a href="<?php echo $urlroot; ?>aggregator_more.php">  न्यूज़ फीड </a>
 								</li>
 							</ul>
 							<!--nav menu end-->

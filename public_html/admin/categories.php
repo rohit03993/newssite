@@ -111,13 +111,11 @@ if (isset($_POST['add'])) {
                 <li class="breadcrumb-item"><a href="dashboard.php">Home</a> <i class="fa fa-angle-right"></i> Categories</li>
             </ol>
 <div class="container-fluid page-content">
-    <div class="row">
-        <div class="col-sm-4">
-        
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add212"><span class="fa fa-plus"></span> Add New </button>
-        </div> 
-    <div class="EditstatusMsg col-sm-4"></div>
-    <div class="col-sm-4"></div>
+    <div class="nm-list-bar">
+        <div class="nm-list-actions">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add212"><span class="fa fa-plus"></span> Add category</button>
+        </div>
+        <div class="EditstatusMsg"></div>
     </div> 
     <div class="row">
         <div class="col-sm-12">
@@ -225,6 +223,7 @@ getresult("desp_categories.php");
 
             <div class="col-md-6 form-group group">
               <label class="control-label">Parent Category:</label>
+              <small class="form-text text-muted">Leave as None for a main category. Pick a parent to make this a subcategory. It then shows under that name on the site.</small>
                <select class="custom-select" id="maincat" name="parent">
                 <option value="0">None</option>
             	<?php

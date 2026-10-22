@@ -1,6 +1,4 @@
 /* Naradmuni Admin — loads only on admin pages (+ login). No body-class gate. */
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap");
-
 :root {
   --nm-bg: #e8ecf1;
   --nm-surface: #ffffff;
@@ -21,7 +19,7 @@
 
 /* ——— Shell ——— */
 body:not(.nm-login) {
-  font-family: "Source Sans 3", "Segoe UI", sans-serif !important;
+  font-family: "Segoe UI", system-ui, sans-serif !important;
   background: var(--nm-bg) !important;
   color: var(--nm-ink);
   font-size: 15px;
@@ -91,13 +89,28 @@ body:not(.nm-login) {
   text-align: center;
 }
 
+#sidebar .sidebar-logo {
+  display: block;
+  width: auto;
+  max-width: 180px;
+  max-height: 52px;
+  height: auto;
+  margin: 0 auto 14px;
+  padding: 6px 10px;
+  background: #fff;
+  border-radius: 12px;
+  object-fit: contain;
+  object-position: center;
+}
+
 #sidebar .sidebar-brand {
   display: block;
   font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: 0.02em;
   color: #fff !important;
-  margin-top: 10px;
+  margin-top: 0;
+  text-decoration: none;
 }
 
 #sidebar .sidebar-brand span {
@@ -111,12 +124,13 @@ body:not(.nm-login) {
 }
 
 #sidebar .sidebar-avatar {
-  width: 64px;
-  height: 64px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(255, 255, 255, 0.18);
   background: #243447;
+  flex: none;
 }
 
 #sidebar .sidebar-avatar--letter {
@@ -129,8 +143,12 @@ body:not(.nm-login) {
 }
 
 #sidebar .sidebar-who {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
   color: #fff;
+  text-align: left;
 }
 
 #sidebar .sidebar-who strong {
@@ -150,13 +168,8 @@ body:not(.nm-login) {
   margin-top: 2px;
 }
 
-#sidebar .sidebar-brand {
-  margin-top: 8px !important;
-  font-size: 0.78rem !important;
-  font-weight: 600 !important;
-  color: rgba(255, 255, 255, 0.45) !important;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+#sidebar .sidebar-avatar--letter {
+  font-size: 0.95rem;
 }
 
 #sidebar ul.components {
@@ -205,7 +218,7 @@ body:not(.nm-login) {
   color: #fff !important;
   background: var(--nm-accent) !important;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(198, 40, 40, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
 #content {
@@ -244,6 +257,20 @@ body:not(.nm-login) {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+.nm-topbar-brand {
+  display: flex;
+  align-items: center;
+}
+.nm-topbar-brand img {
+  height: 40px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  object-position: left center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 4px 8px;
 }
 
 #sidebarCollapse {
@@ -320,17 +347,26 @@ body:not(.nm-login) {
 }
 
 /* ——— Page chrome ——— */
-.breadcrumb {
+#content > ol.breadcrumb {
   background: transparent !important;
-  padding: 16px 24px 8px !important;
+  padding: 18px 24px 0 !important;
   margin: 0 !important;
-  font-size: 0.88rem;
-  color: var(--nm-muted);
+  list-style: none;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--nm-ink);
 }
 
-.breadcrumb a {
-  color: var(--nm-accent) !important;
-  font-weight: 600;
+#content > ol.breadcrumb a[href="dashboard.php"],
+#content > ol.breadcrumb a[href="dashboard.php"] + i {
+  display: none !important;
+}
+
+#content > ol.breadcrumb a {
+  color: var(--nm-muted) !important;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 #content > .container,
@@ -481,15 +517,21 @@ body:not(.nm-login) .card {
   margin: 0 0 22px;
 }
 
-.nm-dash-hero img,
-.nm-dash-hero__letter {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
+.nm-dash-hero img {
+  width: auto;
+  max-width: 220px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 0;
+  background: transparent;
   flex-shrink: 0;
-  border: 3px solid #fff;
-  box-shadow: var(--nm-shadow);
+}
+.nm-dash-hero__letter {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .nm-dash-hero__letter {
@@ -561,6 +603,45 @@ a.nm-stat:hover {
   color: var(--nm-muted);
 }
 
+.nm-list-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+.nm-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.nm-filter {
+  background: #fff;
+  border: 1px solid var(--nm-line);
+  border-radius: 14px;
+  padding: 14px 14px 4px;
+  margin: 0 0 14px;
+}
+.nm-news-table thead th {
+  background: #f8fafc !important;
+  color: #64748b !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-top: 0 !important;
+  border-bottom: 1px solid var(--nm-line) !important;
+}
+.nm-news-table .img-thumbnail {
+  width: 84px;
+  height: 56px;
+  object-fit: contain;
+  background: #f4f6f8;
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid var(--nm-line) !important;
+}
 .nm-news-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -892,8 +973,8 @@ a.nm-byline:hover {
 
 /* Inline fields inside tables → calm read-only look (no inner scrollboxes) */
 #content table textarea,
-#content table input[type="text"],
-#content table input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]) {
+#content table input[type="text"]:not(.form-control),
+#content table input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not(.form-control):not([type="number"]) {
   border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -907,6 +988,16 @@ a.nm-byline:hover {
   font-size: 0.86rem !important;
   color: var(--nm-ink) !important;
   line-height: 1.4;
+}
+
+#content table input.form-control,
+#content table input[type="number"] {
+  border: 1px solid var(--nm-line) !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  padding: 6px 8px !important;
+  width: 100% !important;
+  min-width: 0;
 }
 
 #content table img {
@@ -1428,8 +1519,9 @@ code {
   #sidebarCollapse span {
     display: none;
   }
-  .breadcrumb {
-    padding: 12px 12px 6px !important;
+  #content > ol.breadcrumb {
+    padding: 14px 12px 0 !important;
+    font-size: 1.2rem;
   }
   .nm-quick a {
     flex: 1 1 calc(50% - 10px);
@@ -1446,9 +1538,8 @@ code {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
   }
-  .nm-news-table,
-  .nm-cats-table,
-  #myTable {
+  #pagination-result table:not(.nm-phone-cards),
+  .nm-table-wrap table:not(.nm-phone-cards) {
     min-width: 720px;
   }
   .nm-news-table th:nth-child(8),
@@ -1491,8 +1582,7 @@ code {
     grid-template-columns: 112px minmax(0, 1fr);
     grid-template-areas:
       "photo title"
-      "status status"
-      "views views"
+      "status views"
       "actions actions";
     column-gap: 12px;
     row-gap: 10px;
@@ -1555,9 +1645,9 @@ code {
   }
   .nm-news-table .nm-card-photo img {
     width: 100%;
-    height: 100%;
-    min-height: 96px;
-    object-fit: cover;
+    height: 84px;
+    object-fit: contain;
+    background: #f4f6f8;
     border-radius: 12px;
     display: block;
   }
@@ -1652,14 +1742,29 @@ code {
     min-width: 0 !important;
   }
   .nm-news-table .nm-actions-cell .btn {
-    width: 40px;
-    height: 40px;
+    flex: 1 1 0;
+    width: auto;
+    height: 44px;
     margin: 0;
     padding: 0;
     border-radius: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    font-size: 16px;
+  }
+  .nm-list-bar {
+    align-items: stretch;
+  }
+  .nm-list-actions {
+    width: 100%;
+  }
+  .nm-list-actions .btn {
+    flex: 1 1 calc(50% - 8px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
   }
   .page-content .nm-news-tabs {
     display: flex;
@@ -1672,6 +1777,101 @@ code {
   }
   .page-content .col-sm-4 .btn {
     margin: 0 8px 8px 0;
+  }
+
+  #content table.nm-phone-cards {
+    display: block !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 0 !important;
+  }
+  #content table.nm-phone-cards thead {
+    display: none !important;
+  }
+  #content table.nm-phone-cards tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+  #content table.nm-phone-cards tr {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 12px;
+    padding: 14px;
+    background: #fff !important;
+    border: 1px solid #e6eaef !important;
+    border-radius: 16px;
+  }
+  #content table.nm-phone-cards td {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    padding: 4px 0 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    background: transparent !important;
+  }
+  #content table.nm-phone-cards td:first-child {
+    display: none !important;
+  }
+  #content table.nm-phone-cards td:nth-child(2) {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.4;
+    padding-bottom: 8px !important;
+  }
+  #content table.nm-phone-cards td::before {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  #content table.nm-phone-cards td:nth-child(-n+2)::before,
+  #content table.nm-phone-cards:not(.nm-views-table) td:last-child::before {
+    content: none !important;
+    display: none !important;
+  }
+  .nm-cats-table td:nth-child(3)::before { content: "Parent"; }
+  .nm-cats-table td:nth-child(4)::before { content: "URL"; }
+  .nm-cats-table td:nth-child(5)::before { content: "Order"; }
+  .nm-cats-table td:nth-child(6)::before { content: "Child"; }
+  .nm-cats-table td:nth-child(7)::before { content: "Menu"; }
+  .nm-team-table td:nth-child(3)::before { content: "Designation"; }
+  .nm-team-table td:nth-child(4)::before { content: "Email"; }
+  .nm-team-table td:nth-child(5)::before { content: "Order"; }
+  .nm-team-table td:nth-child(6)::before { content: "Photo"; }
+  .nm-views-table td:nth-child(3)::before { content: "Date"; }
+  .nm-views-table td:nth-child(4)::before { content: "Views"; }
+  #content table.nm-phone-cards:not(.nm-views-table) td:last-child {
+    display: flex !important;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  #content table.nm-phone-cards:not(.nm-views-table) td:last-child .btn,
+  #content table.nm-phone-cards:not(.nm-views-table) td:last-child a {
+    flex: 1 1 0;
+    width: auto !important;
+    min-height: 44px;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px !important;
+    background: #f4f6f8;
+    border: 1px solid var(--nm-line);
+    color: var(--nm-ink);
+    text-decoration: none;
+  }
+  #content table.nm-phone-cards img {
+    max-height: 72px !important;
+    max-width: 120px !important;
+    object-fit: contain;
+    background: #f4f6f8;
   }
 
   .nm-profile {
@@ -1735,6 +1935,38 @@ code {
   textarea.form-control {
     max-width: 100%;
   }
+}
+
+.nm-plain-form {
+  max-width: 720px;
+  background: #fff;
+  border: 1px solid var(--nm-line);
+  border-radius: 14px;
+  padding: 16px 18px 6px;
+}
+
+body:not(.nm-login) .modal-content {
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+body:not(.nm-login) .modal-header,
+body:not(.nm-login) .modal-footer {
+  border-color: var(--nm-line);
+}
+
+#content .page-content > h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 0;
+}
+
+#content .page-content form.card,
+#content .page-content > .card {
+  border: 1px solid var(--nm-line) !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
 }
 
 /* ——— Add / edit news form (scoped) ——— */
@@ -1908,12 +2140,11 @@ code {
 
 /* ——— Login ——— */
 body.nm-login {
-  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   min-height: 100vh;
   margin: 0;
   background:
-    linear-gradient(135deg, rgba(15, 23, 32, 0.94), rgba(198, 40, 40, 0.5)),
-    radial-gradient(circle at 18% 18%, #243447 0%, #0f1720 55%) !important;
+    linear-gradient(160deg, var(--nm-sidebar, #0f1720), color-mix(in srgb, var(--nm-accent) 42%, #120810)) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1959,8 +2190,8 @@ body.nm-login .nm-login-card .card-body {
 
 body.nm-login .nm-login-card .btn-primary {
   width: 100%;
-  background: #c62828;
-  border-color: #c62828;
+  background: var(--nm-accent);
+  border-color: var(--nm-accent);
   font-weight: 600;
   padding: 10px;
   border-radius: 8px;

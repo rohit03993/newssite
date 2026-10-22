@@ -199,7 +199,7 @@ $panel = "padding:18px 20px;border:1px solid #e5e7eb;border-radius:8px;backgroun
   <link rel="stylesheet" href="../include/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="../include/css/style.css">
-  <link rel="stylesheet" href="css/admin-modern.css?v=17">
+  <link rel="stylesheet" href="css/admin-modern.css?v=41">
   <script src="../include/js/jquery.min.js"></script>
   <style>
     /* style.css .card { margin:50% } breaks pages — never use bare .card here */

@@ -55,28 +55,34 @@ function nm_favicon_src($brand)
     return nm_url('/images/logo/' . rawurlencode($file));
 }
 
+function nm_fit_media($src, $alt, $eager, $small = false)
+{
+    $cls = 'fit' . ($small ? ' fit--sm' : '');
+    if ($src === '') {
+        return '<span class="' . $cls . '"><span class="ph"></span></span>';
+    }
+    return '<span class="' . $cls . '"><img src="' . nm_h($src) . '" alt="' . nm_h($alt) . '" loading="' . ($eager ? 'eager' : 'lazy') . '" decoding="async"></span>';
+}
+
 function nm_card($item, $priority = false)
 {
     $href = nm_url('/news/' . $item['newsurl']);
     $src = nm_news_src(isset($item['image']) ? $item['image'] : '');
-    $alt = nm_h(nm_plain_title($item['title']));
+    $alt = nm_plain_title($item['title']);
     $title = nm_title_html($item['title']);
-    $img = $src
-        ? '<img src="' . nm_h($src) . '" alt="' . $alt . '" loading="' . ($priority ? 'eager' : 'lazy') . '" decoding="async">'
-        : '<div class="ph card-ph"></div>';
-    return '<a class="card" href="' . nm_h($href) . '">' . $img . '<h3>' . $title . '</h3></a>';
+    $kicker = !empty($item['hindi_name']) ? '<span class="card-kicker">' . nm_h($item['hindi_name']) . '</span>' : '';
+    $date = !empty($item['date']) ? '<time class="news-date">' . nm_h($item['date']) . '</time>' : '';
+    return '<a class="card" href="' . nm_h($href) . '">' . nm_fit_media($src, $alt, $priority) . '<div class="card-body">' . $kicker . '<h3>' . $title . '</h3>' . $date . '</div></a>';
 }
 
 function nm_list_item($item)
 {
     $href = nm_url('/news/' . $item['newsurl']);
     $src = nm_news_src(isset($item['image']) ? $item['image'] : '');
-    $alt = nm_h(nm_plain_title($item['title']));
+    $alt = nm_plain_title($item['title']);
     $title = nm_title_html($item['title']);
-    $img = $src
-        ? '<img src="' . nm_h($src) . '" alt="' . $alt . '" loading="lazy" decoding="async">'
-        : '<div class="ph list-ph"></div>';
-    return '<a class="list-item" href="' . nm_h($href) . '"><h3>' . $title . '</h3>' . $img . '</a>';
+    $kicker = !empty($item['hindi_name']) ? '<span class="card-kicker">' . nm_h($item['hindi_name']) . '</span>' : '';
+    return '<a class="list-item" href="' . nm_h($href) . '">' . nm_fit_media($src, $alt, false, true) . '<span class="list-copy">' . $kicker . '<h3>' . $title . '</h3></span></a>';
 }
 
 function nm_topic_block($section, $singleOnly, $showEmpty)
@@ -108,10 +114,7 @@ function nm_topic_block($section, $singleOnly, $showEmpty)
     if ($feature) {
         $href = nm_h(nm_url('/news/' . $feature['newsurl']));
         $src = nm_news_src(isset($feature['image']) ? $feature['image'] : '');
-        $alt = nm_h(nm_plain_title($feature['title']));
-        $img = $src
-            ? '<img src="' . nm_h($src) . '" alt="' . $alt . '" loading="lazy">'
-            : '<div class="ph topic-feature-ph"></div>';
+        $img = nm_fit_media($src, nm_plain_title($feature['title']), false);
         $h3 = '<h3>' . nm_title_html($feature['title']) . '</h3>';
         if ($singleOnly) {
             $html .= '<a class="topic-feature topic-feature--solo" href="' . $href . '">' . $img . $h3 . '</a>';

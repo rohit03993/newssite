@@ -24,7 +24,6 @@
 <script>
     var access_link='<?php echo $urlroot; ?>';
 </script>
-<script src="<?php echo $urlroot; ?>nm-script.js"></script>
 <script>
 x.style.display === "none";
 function myFunction() {

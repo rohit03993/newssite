@@ -49,7 +49,7 @@ function nm_dash_count(mysqli $con, string $sql): int {
   <link rel="stylesheet" href="../include/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="../include/css/style.css">
-  <link rel="stylesheet" href="css/admin-modern.css?v=15">
+  <link rel="stylesheet" href="css/admin-modern.css?v=41">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css"> 
 <link rel="stylesheet" href="../include/css/jquery-ui.css">
@@ -81,12 +81,7 @@ function nm_dash_count(mysqli $con, string $sql): int {
         <div class="nm-dash-hero">
           <?php
             $nmDashMark = function_exists('nm_brand_mark') ? nm_brand_mark($con) : array('logo' => '', 'favicon' => '');
-            $nmDashIcon = '';
-            if (!empty($nmDashMark['favicon'])) {
-              $nmDashIcon = $nmDashMark['favicon'];
-            } elseif (!empty($nmDashMark['logo'])) {
-              $nmDashIcon = $nmDashMark['logo'];
-            }
+            $nmDashIcon = !empty($nmDashMark['logo']) ? $nmDashMark['logo'] : '';
           ?>
           <?php if ($nmDashIcon !== '') { ?>
             <img src="<?php echo htmlspecialchars($nmDashIcon); ?>" alt="" style="object-fit:contain;background:#fff;padding:8px;">
@@ -94,8 +89,12 @@ function nm_dash_count(mysqli $con, string $sql): int {
             <span class="nm-dash-hero__letter"><?php echo htmlspecialchars($nmMe['initial']); ?></span>
           <?php } ?>
           <div>
-            <h2>Namaste, <?php echo htmlspecialchars($nmMe['name']); ?></h2>
-            <p class="nm-dash-sub"><?php echo $nmIsAdmin ? ($nmMine > 0 ? 'Admin · also publishing as this byline' : 'Admin · full site') : 'Your stories only'; ?></p>
+            <?php
+              $nmDashTitle = function_exists('nm_brand_mark') ? nm_brand_mark($con) : array('title' => '');
+              $nmDashTitle = !empty($nmDashTitle['title']) ? $nmDashTitle['title'] : 'News';
+            ?>
+            <h2><?php echo htmlspecialchars($nmDashTitle); ?></h2>
+            <p class="nm-dash-sub">Signed in as <?php echo htmlspecialchars($nmMe['name']); ?> · <?php echo $nmIsAdmin ? 'Admin' : 'Author'; ?></p>
           </div>
           <a class="btn btn-info" href="add_news.php"><i class="fas fa-plus"></i> Add news</a>
         </div>
@@ -135,11 +134,6 @@ function nm_dash_count(mysqli $con, string $sql): int {
                 <h4><?php echo number_format(nm_dash_count($con, "SELECT COUNT(*) AS c FROM news WHERE team_id<>'$nmMine' OR team_id IS NULL OR team_id=0")); ?></h4>
             </a>
             <?php } ?>
-            <a class="nm-stat" style="--nm-stat-accent:#ad1457" href="comments.php">
-                <i class="dash-icon fas fa-comments"></i>
-                <h3>Comments</h3>
-                <h4><?php echo number_format(nm_dash_count($con, "SELECT COUNT(*) AS c FROM `comments`")); ?></h4>
-            </a>
             <?php } else { ?>
             <a class="nm-stat nm-stat--focus" style="--nm-stat-accent:#1565c0" href="news.php">
                 <i class="dash-icon fas fa-check-circle"></i>
@@ -177,7 +171,7 @@ function nm_dash_count(mysqli $con, string $sql): int {
             }
             if ($authorRows) { ?>
         <h3 class="nm-quick-heading">Authors</h3>
-        <p class="nm-dash-sub" style="margin-top:-8px;">Click a name to open their published and scheduled stories.</p>
+        <p class="nm-dash-sub" style="margin-top:-8px;">Open a name to see that author’s stories.</p>
         <div class="nm-author-pills">
           <?php foreach ($authorRows as $ar) {
               $tid = (int) $ar['team_id'];
@@ -205,8 +199,8 @@ function nm_dash_count(mysqli $con, string $sql): int {
           <a href="news.php?author=others"><i class="fas fa-users"></i> By others</a>
           <?php } ?>
           <?php if ($nmIsAdmin) { ?>
-          <a href="cleanup_news.php"><i class="fas fa-broom"></i> Cleanup</a>
           <a href="categories.php"><i class="fas fa-folder-open"></i> Categories</a>
+          <a href="branding.php"><i class="fas fa-image"></i> Branding</a>
           <?php } else { ?>
           <a href="my_profile.php"><i class="fas fa-user"></i> My profile</a>
           <?php } ?>

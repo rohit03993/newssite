@@ -68,7 +68,8 @@ if (isset($_POST["login_admin"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="include/css/bootstrap.min.css">
   <link rel="stylesheet" href="include/css/font-awesome.css">
-  <link rel="stylesheet" href="admin/css/admin-modern.css?v=3">
+  <link rel="stylesheet" href="admin/css/admin-modern.css?v=36">
+  <style><?php echo nm_admin_theme_css($con); ?></style>
   <script src="include/js/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="include/js/bootstrap.min.js"></script>

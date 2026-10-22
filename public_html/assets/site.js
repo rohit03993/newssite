@@ -29,8 +29,9 @@
     document.body.style.overflow = "";
   }
 
-  var ham = document.getElementById("open-menu");
-  if (ham) ham.addEventListener("click", openMenu);
+  document.querySelectorAll("[data-open-menu]").forEach(function (btn) {
+    btn.addEventListener("click", openMenu);
+  });
   if (backdrop) backdrop.addEventListener("click", closeMenu);
   var closeBtn = document.getElementById("close-menu");
   if (closeBtn) closeBtn.addEventListener("click", closeMenu);
@@ -47,10 +48,17 @@
   if (search) {
     search.addEventListener("input", function () {
       var q = search.value.trim().toLowerCase();
-      document.querySelectorAll("[data-city]").forEach(function (a) {
-        var name = (a.getAttribute("data-city") || "").toLowerCase();
-        var url = (a.getAttribute("data-url") || "").toLowerCase();
-        a.style.display = !q || name.indexOf(q) !== -1 || url.indexOf(q) !== -1 ? "" : "none";
+      document.querySelectorAll("[data-city-group]").forEach(function (group) {
+        var any = false;
+        group.querySelectorAll("[data-city]").forEach(function (a) {
+          var name = (a.getAttribute("data-city") || "").toLowerCase();
+          var parent = (a.getAttribute("data-parent") || "").toLowerCase();
+          var url = (a.getAttribute("data-url") || "").toLowerCase();
+          var show = !q || name.indexOf(q) !== -1 || parent.indexOf(q) !== -1 || url.indexOf(q) !== -1;
+          a.style.display = show ? "" : "none";
+          if (show) any = true;
+        });
+        group.style.display = any ? "" : "none";
       });
     });
   }

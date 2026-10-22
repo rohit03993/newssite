@@ -146,7 +146,7 @@ $fullPreview = $sampleTitle . "\n" . $sampleUrl . "\n\n" . $previewFooter;
   <link rel="stylesheet" href="../include/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/all.min.css">
   <link rel="stylesheet" href="../include/css/style.css">
-  <link rel="stylesheet" href="css/admin-modern.css?v=16">
+  <link rel="stylesheet" href="css/admin-modern.css?v=41">
   <script src="../include/js/jquery.min.js"></script>
   <style>
     .wa-preview {

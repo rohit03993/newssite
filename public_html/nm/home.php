@@ -37,20 +37,6 @@ function nm_settings($keys)
     return $out;
 }
 
-function nm_state_parent_ids()
-{
-    $rows = nm_rows(
-        "SELECT id FROM categories
-         WHERE LOWER(cat_url) IN ('madhya-pradesh', 'chhattisgarh')
-           AND (parent IS NULL OR parent = '' OR parent = '0')"
-    );
-    $ids = array();
-    foreach ($rows as $row) {
-        $ids[] = (string) $row['id'];
-    }
-    return $ids;
-}
-
 function nm_top_categories()
 {
     return nm_rows(
@@ -231,6 +217,12 @@ function nm_news_by_category($catId, $limit)
     );
 }
 
+function nm_is_top_category($c)
+{
+    $parent = isset($c['parent']) ? trim((string) $c['parent']) : '0';
+    return $parent === '' || $parent === '0';
+}
+
 function nm_child_categories($parentId)
 {
     return nm_rows(
@@ -245,15 +237,97 @@ function nm_child_categories($parentId)
     );
 }
 
+function nm_category_ids_with_news()
+{
+    $ids = array();
+    $rows = nm_rows(
+        "SELECT DISTINCT category AS id
+         FROM news
+         WHERE status = ?
+           AND (newstype IS NULL OR newstype != 'Video')
+           AND category IS NOT NULL AND category != '' AND category != '0'",
+        's',
+        array('Published')
+    );
+    $more = nm_rows(
+        "SELECT DISTINCT nc.category AS id
+         FROM news_cat nc
+         INNER JOIN news n ON n.newsid = nc.news_id
+         WHERE n.status = ?
+           AND (n.newstype IS NULL OR n.newstype != 'Video')",
+        's',
+        array('Published')
+    );
+    foreach (array_merge($rows, $more) as $row) {
+        $id = (int) $row['id'];
+        if ($id > 0) {
+            $ids[(string) $id] = true;
+        }
+    }
+    return $ids;
+}
+
+function nm_category_tree()
+{
+    $cached = nm_cache_get('cat-tree-v1', 60);
+    if (is_array($cached)) {
+        return $cached;
+    }
+    $cats = nm_rows(
+        "SELECT id, hindi_name, cat_url, parent, short, latter, menu
+         FROM categories
+         WHERE cat_url IS NOT NULL AND cat_url != ''
+           AND hindi_name IS NOT NULL AND hindi_name != ''"
+    );
+    $withNews = nm_category_ids_with_news();
+    $children = array();
+    $tops = array();
+    foreach ($cats as $c) {
+        if (nm_is_top_category($c)) {
+            $tops[] = $c;
+            continue;
+        }
+        $children[(string) (int) $c['parent']][] = $c;
+    }
+    usort($tops, function ($a, $b) {
+        $sa = (int) (isset($a['short']) ? $a['short'] : 0);
+        $sb = (int) (isset($b['short']) ? $b['short'] : 0);
+        if ($sa !== $sb) {
+            return $sa - $sb;
+        }
+        return (int) $a['id'] - (int) $b['id'];
+    });
+    $tree = array();
+    foreach ($tops as $top) {
+        $id = (string) (int) $top['id'];
+        $kids = isset($children[$id]) ? $children[$id] : array();
+        $visible = array();
+        foreach ($kids as $kid) {
+            if (isset($withNews[(string) (int) $kid['id']])) {
+                $visible[] = $kid;
+            }
+        }
+        usort($visible, function ($a, $b) {
+            $la = isset($a['latter']) ? (string) $a['latter'] : '';
+            $lb = isset($b['latter']) ? (string) $b['latter'] : '';
+            if ($la !== $lb) {
+                return strcmp($la, $lb);
+            }
+            return strcmp((string) $a['hindi_name'], (string) $b['hindi_name']);
+        });
+        $onMenu = isset($top['menu']) && $top['menu'] === 'Yes';
+        if (!$onMenu && !isset($withNews[$id]) && !$visible) {
+            continue;
+        }
+        $top['children'] = $visible;
+        $tree[] = $top;
+    }
+    nm_cache_set('cat-tree-v1', $tree);
+    return $tree;
+}
+
 function nm_districts_with_news()
 {
-    $parents = nm_state_parent_ids();
-    if (!$parents) {
-        return array();
-    }
-    $place = implode(',', array_fill(0, count($parents), '?'));
-    $types = 's' . str_repeat('s', count($parents));
-    $params = array_merge(array('Published'), $parents);
     return nm_rows(
         "SELECT DISTINCT c.id, c.hindi_name, c.cat_url, c.latter
          FROM categories c
@@ -261,12 +335,12 @@ function nm_districts_with_news()
            ON n.status = ?
           AND (n.newstype IS NULL OR n.newstype != 'Video')
           AND (n.category = CAST(c.id AS CHAR) OR n.category = c.id)
-         WHERE c.parent IN ($place)
+         WHERE c.parent IS NOT NULL AND c.parent != '' AND c.parent != '0'
            AND c.cat_url IS NOT NULL AND c.cat_url != ''
            AND c.hindi_name IS NOT NULL AND c.hindi_name != ''
          ORDER BY c.latter ASC, c.hindi_name ASC",
-        $types,
-        $params
+        's',
+        array('Published')
     );
 }
 
@@ -377,7 +451,77 @@ function nm_http_json($url)
     return is_array($data) ? $data : null;
 }
 
+function nm_cache_file($key)
+{
+    return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'nm-' . substr(md5(__DIR__ . '|' . $key), 0, 16) . '.cache';
+}
+
+function nm_cache_get($key, $ttl)
+{
+    $file = nm_cache_file($key);
+    if (!is_file($file) || (time() - (int) @filemtime($file)) > (int) $ttl) {
+        return null;
+    }
+    $data = @unserialize((string) @file_get_contents($file));
+    return is_array($data) ? $data : null;
+}
+
+function nm_cache_set($key, $data)
+{
+    @file_put_contents(nm_cache_file($key), serialize($data), LOCK_EX);
+}
+
+function nm_rank_trending($pool, $limit)
+{
+    $limit = (int) $limit;
+    if (!$pool) {
+        return array();
+    }
+    $ids = array();
+    foreach ($pool as $row) {
+        $id = isset($row['newsid']) ? (int) $row['newsid'] : 0;
+        if ($id > 0) {
+            $ids[] = $id;
+        }
+    }
+    $ids = array_values(array_unique($ids));
+    if (!$ids) {
+        return array();
+    }
+    $idList = implode(',', $ids);
+    $scores = array();
+    foreach (nm_rows("SELECT newsid, COUNT(*) AS c FROM news_views WHERE newsid IN ($idList) GROUP BY newsid") as $row) {
+        $scores[(int) $row['newsid']] = (int) $row['c'];
+    }
+    foreach (nm_rows("SELECT newsid, base_count FROM news_view_base WHERE newsid IN ($idList)") as $row) {
+        $id = (int) $row['newsid'];
+        $scores[$id] = (isset($scores[$id]) ? $scores[$id] : 0) + (int) $row['base_count'];
+    }
+    usort($pool, function ($a, $b) use ($scores) {
+        $sa = isset($scores[(int) $a['newsid']]) ? $scores[(int) $a['newsid']] : 0;
+        $sb = isset($scores[(int) $b['newsid']]) ? $scores[(int) $b['newsid']] : 0;
+        if ($sa === $sb) {
+            return (int) $b['newsid'] - (int) $a['newsid'];
+        }
+        return $sb - $sa;
+    });
+    return array_slice($pool, 0, $limit);
+}
+
 function nm_home()
+{
+    $hit = nm_cache_get('home-v2', 60);
+    if (is_array($hit)) {
+        return $hit;
+    }
+    $data = nm_home_live();
+    if (is_array($data) && empty($data['error'])) {
+        nm_cache_set('home-v2', $data);
+    }
+    return $data;
+}
+
+function nm_home_live()
 {
     if (!nm_con()) {
         return array('error' => 'Could not connect to MySQL');
@@ -387,30 +531,6 @@ function nm_home()
     $recent = nm_recent(60);
     $pinned = nm_pinned_lead();
     $mains = nm_main_categories();
-
-    $narad = null;
-    foreach ($mains as $cat) {
-        if (nm_is_kahin($cat)) {
-            $narad = $cat;
-            break;
-        }
-    }
-    if (!$narad) {
-        $found = nm_rows(
-            "SELECT id, hindi_name, cat_url FROM categories
-             WHERE hindi_name LIKE ? OR LOWER(cat_url) LIKE ? OR LOWER(cat_url) LIKE ?
-             ORDER BY id ASC LIMIT 1",
-            'sss',
-            array('%कहिन%', '%kahin%', '%narad%kahin%')
-        );
-        $narad = isset($found[0]) ? $found[0] : null;
-    }
-
-    $naradBlock = null;
-    if ($narad) {
-        $naradItems = nm_news_by_category($narad['id'], 8);
-        $naradBlock = array('cat' => $narad, 'items' => $naradItems, 'fromDb' => count($naradItems));
-    }
 
     $seen = array();
     $lead = null;
@@ -445,11 +565,18 @@ function nm_home()
         $secondaries = nm_take_unique($recent, $seen, 5);
     }
 
-    if ($naradBlock) {
-        $naradBlock['items'] = nm_take_unique($naradBlock['items'], $seen, 1);
-    }
-
     $grid = nm_take_unique($recent, $seen, 24);
+    $trendPool = array();
+    foreach ($recent as $n) {
+        $id = isset($n['newsid']) ? (int) $n['newsid'] : 0;
+        if ($id < 1) {
+            continue;
+        }
+        if ($lead && !empty($lead['newsid']) && $id === (int) $lead['newsid']) {
+            continue;
+        }
+        $trendPool[] = $n;
+    }
 
     $brand = nm_settings(array(
         'brand_logo', 'brand_favicon',
@@ -460,7 +587,8 @@ function nm_home()
         'error' => '',
         'lead' => $lead,
         'secondaries' => $secondaries,
-        'narad' => $naradBlock,
+        'breaking' => array_slice($breaking, 0, 6),
+        'trending' => nm_rank_trending($trendPool, 8),
         'grid' => $grid,
         'cities' => nm_districts_with_news(),
         'nav' => $mains,
