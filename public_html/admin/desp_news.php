@@ -78,6 +78,34 @@ foreach ($faq as $row) {
 }
 $viewCounts = function_exists("nm_page_view_counts") ? nm_page_view_counts($con, $viewIds) : null;
 
+$nmAuthorPhoto = array();
+$nmAuthorName = array();
+if ($viewIds) {
+	$idList = implode(",", $viewIds);
+	$aq = mysqli_query($con, "SELECT n.newsid, t.t_id, t.name, t.image FROM news n LEFT JOIN team t ON t.t_id = n.team_id WHERE n.newsid IN ($idList)");
+	if ($aq instanceof mysqli_result) {
+		while ($ar = mysqli_fetch_assoc($aq)) {
+			$nmAuthorName[(int) $ar["newsid"]] = (string) $ar["name"];
+			$nmAuthorPhoto[(int) $ar["newsid"]] = (string) $ar["image"];
+		}
+	}
+}
+$nmSoleAuthor = array("name" => "", "image" => "", "t_id" => 0);
+$soleQ = mysqli_query($con, "SELECT DISTINCT `team_id` FROM `admin` WHERE `team_id` > 0");
+$soleIds = array();
+if ($soleQ instanceof mysqli_result) {
+	while ($sr = mysqli_fetch_assoc($soleQ)) {
+		$soleIds[] = (int) $sr["team_id"];
+	}
+}
+if (count($soleIds) === 1) {
+	$sq = mysqli_query($con, "SELECT `t_id`,`name`,`image` FROM `team` WHERE `t_id`='" . $soleIds[0] . "' LIMIT 1");
+	if ($sq instanceof mysqli_result && ($srow = mysqli_fetch_assoc($sq))) {
+		$nmSoleAuthor = $srow;
+		mysqli_query($con, "UPDATE `news` SET `team_id`='" . (int) $srow["t_id"] . "' WHERE `team_id` IS NULL OR `team_id`=0");
+	}
+}
+
 if(empty($_GET["rowcount"])) {
 $_GET["rowcount"] = $db_handle->numRows("SELECT newsid from news" . $queryCondition);
 }
@@ -153,19 +181,21 @@ $output = '';
                               <?php } ?>
                               </div>
                               <?php
-                              $authorName = "";
+                              $nid = (int) $faq[$k]["newsid"];
+                              $authorName = isset($nmAuthorName[$nid]) ? $nmAuthorName[$nid] : "";
+                              $authorFile = isset($nmAuthorPhoto[$nid]) ? $nmAuthorPhoto[$nid] : "";
                               $tid = isset($faq[$k]["team_id"]) ? (int) $faq[$k]["team_id"] : 0;
-                              if ($tid > 0) {
-                                  $aq = mysqli_query($con, "SELECT `name` FROM `team` WHERE `t_id`='" . $tid . "' LIMIT 1");
-                                  if ($aq instanceof mysqli_result) {
-                                      $ar = mysqli_fetch_assoc($aq);
-                                      if (is_array($ar) && !empty($ar["name"])) {
-                                          $authorName = $ar["name"];
-                                      }
-                                  }
+                              if ($authorName === "" && $nmSoleAuthor["name"] !== "") {
+                                  $authorName = (string) $nmSoleAuthor["name"];
+                                  $authorFile = (string) $nmSoleAuthor["image"];
+                                  $tid = (int) $nmSoleAuthor["t_id"];
                               }
                               if ($authorName !== "") {
-                                  echo '<a class="nm-byline" href="news.php?author=' . $tid . '">By ' . htmlspecialchars($authorName) . '</a>';
+                                  echo '<a class="nm-byline" href="news.php?author=' . $tid . '">';
+                                  if ($authorFile !== "") {
+                                      echo '<img class="nm-byline-photo" src="../team/' . htmlspecialchars($authorFile) . '" alt="">';
+                                  }
+                                  echo 'By ' . htmlspecialchars($authorName) . '</a>';
                               }
                               $phoneMeta = trim($catName);
                               $phoneWhen = trim((string) $faq[$k]["date"]);

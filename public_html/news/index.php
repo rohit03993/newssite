@@ -68,7 +68,12 @@ nm_public_top();
           <h1 class="h1 news-title"><?php echo nm_title_html($article['title']); ?></h1>
           <div class="meta-row">
             <div class="meta-left">
+              <?php
+                $authorId = ($article && !empty($article['author_id'])) ? (int) $article['author_id'] : 0;
+                $authorHref = $authorId > 0 ? nm_url('/author/' . $authorId) : '';
+              ?>
               <div class="byline byline--modern">
+                <?php if ($authorHref !== ''): ?><a class="byline-link" href="<?php echo nm_h($authorHref); ?>"><?php endif; ?>
                 <div class="byline-avatar">
                   <?php if ($authorPhoto !== ''): ?>
                     <img src="<?php echo nm_h($authorPhoto); ?>" alt="">
@@ -80,6 +85,7 @@ nm_public_top();
                   <p class="byline-author"><span class="byline-by">By </span><strong><?php echo nm_h($author); ?></strong></p>
                   <p class="byline-desk"><?php echo nm_h($siteTitle); ?><?php echo $place !== '' ? ', ' . nm_h($place) : ''; ?></p>
                 </div>
+                <?php if ($authorHref !== ''): ?></a><?php endif; ?>
               </div>
             </div>
             <div class="meta-tools">

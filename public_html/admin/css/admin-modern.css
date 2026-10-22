@@ -691,6 +691,18 @@ a.nm-stat:hover {
 }
 
 a.nm-byline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nm-byline-photo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+a.nm-byline {
   text-decoration: none;
 }
 

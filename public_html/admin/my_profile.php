@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save_profile"])) {
 		$err = "Name is required.";
 	} else {
 		$imgSql = "";
+		$imageName = "";
 		if (!empty($_FILES["image"]["name"]) && (int) $_FILES["image"]["error"] === UPLOAD_ERR_OK) {
 			$ext = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
 			if (in_array($ext, array("jpg", "jpeg", "png", "gif", "webp"), true)) {
@@ -52,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save_profile"])) {
 				}
 				$fname = bin2hex(random_bytes(8)) . "." . $ext;
 				if (move_uploaded_file($_FILES["image"]["tmp_name"], $dir . "/" . $fname)) {
+					$imageName = $fname;
 					$imgSql = ", `image`='" . mysqli_real_escape_string($con, $fname) . "'";
 				}
 			}
@@ -69,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["save_profile"])) {
 			mysqli_query(
 				$con,
 				"INSERT INTO `team` (`name`,`email`,`designation`,`image`,`fb_link`,`tw_link`,`short`)
-				 VALUES ('$escN','$escA','$escD','','','',0)"
+				 VALUES ('$escN','$escA','$escD','" . mysqli_real_escape_string($con, $imageName) . "','','',0)"
 			);
 			$teamId = (int) mysqli_insert_id($con);
 			$aid = (int) $userRow["id"];

@@ -1,6 +1,15 @@
 <?php
 require_once __DIR__ . '/home.php';
 
+function nm_sole_author_id()
+{
+    $links = nm_rows("SELECT DISTINCT `team_id` FROM `admin` WHERE `team_id` > 0");
+    if (count($links) !== 1) {
+        return 0;
+    }
+    return (int) $links[0]['team_id'];
+}
+
 function nm_article($slug)
 {
     $slug = trim((string) $slug);
@@ -21,10 +30,19 @@ function nm_article($slug)
         return null;
     }
     $article = $rows[0];
+    $teamId = (int) $article['team_id'];
+    if ($teamId < 1) {
+        $teamId = nm_sole_author_id();
+        if ($teamId > 0 && nm_con()) {
+            $id = (int) $article['newsid'];
+            mysqli_query(nm_con(), "UPDATE `news` SET `team_id`='$teamId' WHERE `newsid`='$id' AND (`team_id` IS NULL OR `team_id`=0) LIMIT 1");
+            $article['team_id'] = $teamId;
+        }
+    }
     $team = nm_rows(
         "SELECT t_id, name, designation, image FROM team WHERE t_id = ? LIMIT 1",
         'i',
-        array((int) $article['team_id'])
+        array($teamId)
     );
     $article['author_id'] = isset($team[0]['t_id']) ? (int) $team[0]['t_id'] : 0;
     $article['author_name'] = isset($team[0]['name']) ? $team[0]['name'] : '';

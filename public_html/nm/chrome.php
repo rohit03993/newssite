@@ -96,7 +96,7 @@ function nm_public_head($pageTitle, $pageDesc, $extraHead = '')
   <?php if ($d['favicon'] !== ''): ?><link rel="icon" href="<?php echo nm_h($d['favicon']); ?>"><?php endif; ?>
   <meta name="description" content="<?php echo nm_h($desc); ?>">
   <?php echo $extraHead; ?>
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=23">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=24">
   <style>
     <?php echo $d['themeCss']; ?>
     [hidden] { display: none !important; }
