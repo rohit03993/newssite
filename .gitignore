@@ -15,7 +15,6 @@ public_html/admin/config.php
 public_html/DbConnect.php
 public_html/API/config.php
 public_html/API2/config.php
-public_html/admin/dbcontroller.php
 public_html/menu.php
 public_html/phpinfo.php
 public_html/admin/error_log
