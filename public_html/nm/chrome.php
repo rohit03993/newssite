@@ -96,7 +96,7 @@ function nm_public_head($pageTitle, $pageDesc, $extraHead = '')
   <?php if ($d['favicon'] !== ''): ?><link rel="icon" href="<?php echo nm_h($d['favicon']); ?>"><?php endif; ?>
   <meta name="description" content="<?php echo nm_h($desc); ?>">
   <?php echo $extraHead; ?>
-  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=24">
+  <link rel="stylesheet" href="<?php echo nm_h(nm_url('/assets/site.css')); ?>?v=25">
   <style>
     <?php echo $d['themeCss']; ?>
     [hidden] { display: none !important; }
@@ -131,6 +131,10 @@ function nm_public_top()
           <a href="<?php echo nm_h(nm_url('/')); ?>" class="logo"><?php echo $logoHtml; ?></a>
         </div>
         <div class="header-actions">
+          <a class="login-btn" href="<?php echo nm_h(nm_url('/manage.php')); ?>" aria-label="Login" title="Login">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5 19.2a7 7 0 0 1 14 0"/></svg>
+            <span>Login</span>
+          </a>
           <a class="icon-btn" href="<?php echo nm_h(nm_url('/search')); ?>" aria-label="खोजें">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           </a>
@@ -177,6 +181,7 @@ function nm_public_top()
       <span><strong>ऐप इंस्टॉल करें</strong><small>Install <?php echo nm_h($siteTitle); ?></small></span>
     </a>
     <nav class="mnav-links">
+      <a href="<?php echo nm_h(nm_url('/manage.php')); ?>"><span>Login</span><span class="mnav-chev">›</span></a>
       <a href="<?php echo nm_h(nm_url('/')); ?>"><span>होम</span><span class="mnav-chev">›</span></a>
       <a href="<?php echo nm_h(nm_url('/latest')); ?>"><span>ताज़ा समाचार</span><span class="mnav-chev">›</span></a>
       <a href="<?php echo nm_h(nm_url('/search')); ?>"><span>खोजें</span><span class="mnav-chev">›</span></a>
